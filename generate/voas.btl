@@ -1,0 +1,21 @@
+package ${packageName};
+
+import org.mapstruct.Mapper;
+
+import ${importBO}.${className}PageVO;
+import ${importBO}.${className}ViewVO;
+import ${importPO}.${className}PO;
+
+/**
+ * 
+ * ${tableRemark}
+ * 
+ * 
+ */
+@Mapper(componentModel = "spring")
+public interface ${className}VOAs {
+
+    ${className}PageVO pageAs(${className}PO po);
+    ${className}ViewVO viewAs(${className}PO po);
+    
+}

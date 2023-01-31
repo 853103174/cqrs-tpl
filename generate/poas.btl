@@ -1,0 +1,22 @@
+package ${packageName};
+
+import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
+
+import ${importPO}.${className}PO;
+import ${importDO}.${className}CreateBO;
+import ${importDO}.${className}ModifyBO;
+
+/**
+ * 
+ * ${tableRemark}
+ * 
+ * 
+ */
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface ${className}POAs {
+
+    ${className}PO createAs(${className}CreateBO bo);
+    ${className}PO modifyAs(${className}ModifyBO bo);
+    
+}

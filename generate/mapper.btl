@@ -1,0 +1,17 @@
+package ${packageName};
+
+import org.beetl.sql.mapper.BaseMapper;
+import org.springframework.stereotype.Repository;
+
+import ${importPO}.${className}PO;
+
+/**
+ * 
+ * ${tableRemark}
+ * 
+ * 
+ */
+@Repository
+public interface ${className}Mapper extends BaseMapper<${className}PO> {
+
+}

@@ -1,0 +1,54 @@
+package ${packageName};
+
+import java.util.function.Function;
+
+import org.beetl.sql.core.page.PageResult;
+import org.springframework.stereotype.Service;
+
+import ${importPOAs}.${className}VOAs;
+import ${importBO}.${className}PageVO;
+import ${importBO}.${className}ViewVO;
+import ${importPO}.${className}PO;
+import ${importMapper}.${className}Mapper;
+import ${importDO}.${className}PageBO;
+
+import lombok.AllArgsConstructor;
+
+/**
+ *
+ * ${tableRemark}
+ *
+ *
+ */
+@Service
+@AllArgsConstructor
+public class ${className}QrySvc {
+
+    private final ${className}VOAs assembler;
+    private final ${className}Mapper mapper;
+
+    /**
+     * 分页
+     *
+     * @param bo
+     * @return
+     */
+    public PageResult<${className}PageVO> page(${className}PageBO bo) {
+        PageResult<${className}PO> result = mapper.createLambdaQuery()
+                .page(bo.getPageNum(), bo.getPageSize());
+        Function<${className}PO, ${className}PageVO> function = po -> assembler.pageAs(po);
+
+        return result.convert(function);
+    }
+
+    /**
+     * 查询单个
+     *
+     * @param id
+     * @return
+     */
+    public ${className}ViewVO view(Long id) {
+        return assembler.viewAs(mapper.single(id));
+    }
+
+}

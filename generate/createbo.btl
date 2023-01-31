@@ -1,0 +1,45 @@
+package ${packageName};
+
+<%if(importBigInteger==true){%>
+import java.math.BigInteger;
+<%}%>
+<%if(importAt==true){%>
+import java.util.Date;
+<%}%>
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * ${tableRemark}
+ *
+ *
+ */
+@Getter
+@Setter
+public class ${className}CreateBO {
+
+<%for(cm in columns){%>
+    <%
+    if(cm.colName=="id"||cm.colName=="del"||cm.colName=="createBy"||cm.colName=="createAt"||cm.colName=="updateBy"||cm.colName=="updateAt"){
+        continue;
+    }
+    %>
+    /**
+     * ${cm.remark}
+     */
+    <%if(cm.javaType=="String"){%>
+    @NotBlank(message = "请输入${cm.remark}")
+    @Size(max = ${cm.maxSize}, message = "${cm.remark}限制输入${cm.maxSize}个字符")
+    <%}else{%>
+    @NotNull(message = "请输入${cm.remark}")
+    <%}%>
+    private ${cm.javaType} ${cm.colName};
+<%}%>
+
+}

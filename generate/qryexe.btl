@@ -1,0 +1,38 @@
+package ${packageName};
+
+import org.beetl.sql.core.page.PageResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import ${importSvc}.${className}QrySvc;
+import ${importBO}.${className}PageVO;
+import ${importBO}.${className}ViewVO;
+import ${importDO}.${className}PageBO;
+
+import lombok.AllArgsConstructor;
+
+/**
+ *
+ * ${tableRemark}
+ *
+ *
+ */
+@RestController
+@AllArgsConstructor
+@RequestMapping("/qry/${path}")
+public class ${className}QryExe {
+
+    private final ${className}QrySvc service;
+
+    @GetMapping("/page")
+    public PageResult<${className}PageVO> page(${className}PageBO bo) {
+        return service.page(bo);
+    }
+
+    @GetMapping("/view")
+    public ${className}ViewVO view(Long id) {
+        return service.view(id);
+    }
+
+}

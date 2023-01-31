@@ -1,0 +1,35 @@
+package ${packageName};
+
+<%if(importBigInteger==true){%>
+import java.math.BigInteger;
+<%}%>
+<%if(importDate==true){%>
+import java.util.Date;
+<%}%>
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * ${tableRemark}
+ *
+ *
+ */
+@Getter
+@Setter
+public class ${className}PageVO {
+
+<%for(cm in columns){%>
+    <%
+    if(cm.colName=="del"||cm.colName=="createBy"||cm.colName=="updateBy"||cm.colName=="updateAt"){
+        continue;
+    }
+    %>
+    /**
+     * ${cm.remark}
+     */
+    private ${cm.javaType} ${cm.colName};
+<%}%>
+
+}

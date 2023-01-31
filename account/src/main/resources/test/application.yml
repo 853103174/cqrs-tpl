@@ -1,0 +1,54 @@
+server:
+  port: 8811
+spring:
+  datasource:
+    poolName: BeeCP-Account
+    username: root
+    password: SDnc@mysql#1024
+    jdbcUrl: jdbc:mysql://127.0.0.1:3306/fresh?useUnicode=true&characterEncoding=utf-8&useServerPrepStmts=true&cachePrepStmts=true&prepStmtCacheSize=256&prepStmtCacheSqlLimit=2048
+    driverClassName: com.mysql.cj.jdbc.Driver
+    maxActive: 10   #连接池最大个数
+    initialSize: 3   #连接池初始大小
+    maxWait: 120000   #连接借用等待最大时间(毫秒)
+    fairMode: false   #是否使用公平模式
+    validTestSql: select 1   #连接有效性测试SQL语句
+    validAssumeTime: 5000   #连接测试的间隔时间(毫秒)
+
+  # redis 配置
+  redis:
+    # 地址
+    host: 127.0.0.1
+    port: 9736
+    # 数据库索引
+    database: 2
+    # 密码
+    password: SDNC@redis#1024
+
+beetlsql:
+  # sqlManage，可以配置多个，用逗号隔开
+  sqlManagers: primarySQLManager
+  # primarySQLManager 的配置
+  primarySQLManager:
+    # 数据源名称
+    ds: primaryDataSource
+    # 指明 mapper 类的结尾，扫描到以 Mapper 结尾的类会为其自动生成代理类，注册为 Spring 的 Bean
+    # 默认扫描 Mapper 结尾，可不配置。如果你不是 xxxMapper 这样以 Mapper 结尾的，则需要配置
+    daoSuffix: Mapper
+    # 要扫描 Mapper 的包名
+    basePackage: com.sdnc.account.infrastructure
+    # POJO 和数据表列的名称转换，如驼峰 userName 转换为下划线的 user_name
+    nameConversion: org.beetl.sql.core.UnderlinedNameConversion
+    # 数据库方言
+    dbStyle: org.beetl.sql.core.db.MySqlStyle
+    # 是否是开发模式
+    dev: false
+
+# Token校验忽略的URL
+passport:
+  url:
+    ignore:
+      - /cmd/passport/register
+      - /cmd/passport/login
+      - /cmd/passport/refresh
+      - /cmd/passport/reset-pwd
+      - /cmd/passport/code

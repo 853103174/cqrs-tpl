@@ -1,0 +1,62 @@
+package ${packageName};
+
+import java.util.Date;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.sdnc.common.auth.AccessContext;
+import ${importPOAs}.${className}POAs;
+import ${importPO}.${className}PO;
+import ${importMapper}.${className}Mapper;
+import ${importDO}.${className}CreateBO;
+import ${importDO}.${className}ModifyBO;
+
+import lombok.AllArgsConstructor;
+
+/**
+ *
+ * ${tableRemark}
+ *
+ *
+ */
+@Service
+@AllArgsConstructor
+@Transactional(rollbackFor = Exception.class)
+public class ${className}CmdSvc {
+
+    private final ${className}POAs assembler;
+    private final ${className}Mapper mapper;
+
+    /**
+     * 创建
+     *
+     * @param bo
+     */
+    public void create(${className}CreateBO bo) {
+        Date now = new Date();
+        Long userId = AccessContext.getAccessUser().getId();
+        ${className}PO po = assembler.createAs(bo);
+        po.setCreateBy(userId);
+        po.setCreateAt(now);
+        po.setUpdateBy(userId);
+        po.setUpdateAt(now);
+        //po.setDel(0);
+        mapper.insertTemplate(po);
+    }
+
+    /**
+     * 修改
+     *
+     * @param bo
+     */
+    public void modify(${className}ModifyBO bo) {
+        Date now = new Date();
+        Long userId = AccessContext.getAccessUser().getId();
+        ${className}PO po = assembler.modifyAs(bo);
+        po.setUpdateBy(userId);
+        po.setUpdateAt(now);
+        mapper.updateTemplateById(po);
+    }
+
+}
