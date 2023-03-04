@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sdnc.account.interfaces.businessobject.passport.LoginBO;
 import com.sdnc.account.interfaces.businessobject.passport.RegisterBO;
 import com.sdnc.common.constant.TokenConstants;
-import com.sdnc.common.exception.BizException;
+import com.sdnc.common.exception.SystemException;
 import com.sdnc.common.exception.TokenException;
 import com.sdnc.common.kits.KV;
 import com.sdnc.common.kits.ULIDKit;
@@ -69,7 +69,7 @@ public class PassportCmdSvc {
         } else if ("2".equals(bo.getType())) {
             // execute = codeLoginService.execute(dtoAssembler.loginAssembler(dto));
         } else {
-            throw new BizException("不支持当前登录方式");
+            throw new SystemException("不支持当前登录方式");
         }
         Long userId = 0L;
         KV kv = KV.by("accessToken", createAccessToken(userId))

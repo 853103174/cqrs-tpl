@@ -10,25 +10,25 @@ import jakarta.validation.ConstraintValidatorContext;
  */
 public class EnumValueValidator implements ConstraintValidator<EnumValue, Object> {
 
-	private String[] strValues;
-	private int[] intValues;
+	private String[] strVal;
+	private int[] intVal;
 
 	@Override
 	public void initialize(EnumValue constraintAnnotation) {
-		strValues = constraintAnnotation.strVal();
-		intValues = constraintAnnotation.intVal();
+		strVal = constraintAnnotation.strVal();
+		intVal = constraintAnnotation.intVal();
 	}
 
 	@Override
 	public boolean isValid(Object value, ConstraintValidatorContext context) {
 		if (value instanceof String) {
-			for (String str : strValues) {
+			for (String str : strVal) {
 				if (str.equals(value)) {
 					return true;
 				}
 			}
 		} else if (value instanceof Integer val) {
-			for (int num : intValues) {
+			for (int num : intVal) {
 				if (num == val.intValue()) {
 					return true;
 				}

@@ -70,49 +70,49 @@ public class GenerateJavaFileUtils {
 	private static void createPackage(String packages) {
 		String basePath = System.getProperty("java.class.path");
 		String basepackagename = basePath.substring(0, basePath.indexOf(";") - 9) + "/src/main/java/com/sdnc/trade";
-		String command_assembler = basepackagename + "/%s/application/assembler/";
+		String command_assembler = basepackagename + "/application/assembler/%s/";
 		command_assembler_name = String.format(command_assembler, packages);
 		File dir = new File(command_assembler_name);
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		String command_service = basepackagename + "/%s/application/service/";
+		String command_service = basepackagename + "/application/service/%s/";
 		command_service_name = String.format(command_service, packages);
 		dir = new File(command_service_name);
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		String command_vo = basepackagename + "/%s/domain/valueobject/";
+		String command_vo = basepackagename + "/domain/valueobject/%s/";
 		command_vo_name = String.format(command_vo, packages);
 		dir = new File(command_vo_name);
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		String command_po = basepackagename + "/%s/domain/persistantobject/";
+		String command_po = basepackagename + "/domain/persistantobject/%s/";
 		command_po_name = String.format(command_po, packages);
 		dir = new File(command_po_name);
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		String command_mapper = basepackagename + "/%s/infrastructure/mapper/";
+		String command_mapper = basepackagename + "/infrastructure/mapper/%s/";
 		command_mapper_name = String.format(command_mapper, packages);
 		dir = new File(command_mapper_name);
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		String command_metaq = basepackagename + "/%s/infrastructure/metaq/";
+		String command_metaq = basepackagename + "/infrastructure/metaq/%s/";
 		command_metaq_name = String.format(command_metaq, packages);
 		dir = new File(command_metaq_name);
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		String command_controller = basepackagename + "/%s/interfaces/controller/";
+		String command_controller = basepackagename + "/interfaces/controller/%s/";
 		command_controller_name = String.format(command_controller, packages);
 		dir = new File(command_controller_name);
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		String command_bo = basepackagename + "/%s/interfaces/businessobject/";
+		String command_bo = basepackagename + "/interfaces/businessobject/%s/";
 		command_businessobject_name = String.format(command_bo, packages);
 		dir = new File(command_businessobject_name);
 		if (!dir.exists()) {

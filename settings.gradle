@@ -1,2 +1,2 @@
-rootProject.name = 'gradle-template'
+rootProject.name = 'cqrs-tpl'
 include('common', 'account', 'trade-hall')

@@ -2,7 +2,7 @@ server:
   port: 8811
 spring:
   datasource:
-    poolName: BeeCP-Account
+    poolName: BeeCP-Account   #BeeCP连接池
     username: root
     password: SDnc@mysql#1024
     jdbcUrl: jdbc:mysql://127.0.0.1:3306/fresh?useUnicode=true&characterEncoding=utf-8&useServerPrepStmts=true&cachePrepStmts=true&prepStmtCacheSize=256&prepStmtCacheSqlLimit=2048

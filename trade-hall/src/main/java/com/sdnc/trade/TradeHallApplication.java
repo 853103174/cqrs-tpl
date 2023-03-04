@@ -2,12 +2,12 @@ package com.sdnc.trade;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.ComponentScan;
 
 // @EnableDsMonitor
 // @EnableCaching
 @SpringBootApplication
-@Component("com.sdnc")
+@ComponentScan("com.sdnc")
 public class TradeHallApplication {
 
 	public static void main(String[] args) {
