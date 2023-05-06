@@ -6,8 +6,13 @@ import java.util.Map;
 import org.noear.snack.ONode;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.sdnc.common.exception.SystemException;
+import com.sdnc.common.exception.TokenException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -48,8 +53,20 @@ public class GlobalExceptionResolver implements HandlerExceptionResolver {
 				result.append(endStr);
 				result.append("异常:=============================");
 				result.append(endStr);
-				result.append(CommUtil.getExpStack(ex));
-				log.fatal(result);
+				if (ex instanceof BindException be) {
+					FieldError error = be.getBindingResult().getFieldErrors().get(0);
+					result.append(error.getField()).append("--").append(error.getDefaultMessage());
+					log.warn(result);
+				} else if (ex instanceof SystemException se) {
+					result.append(se.getMessage());
+					log.warn(result);
+				} else if (ex instanceof TokenException te) {
+					result.append("未获取到refreshToken");
+					log.warn(result);
+				} else {
+					result.append(CommUtil.getExpStack(ex));
+					log.fatal(result);
+				}
 			} catch (Exception e) {
 			}
 		} else {
@@ -67,8 +84,20 @@ public class GlobalExceptionResolver implements HandlerExceptionResolver {
 				result.append(endStr);
 				result.append("异常:=============================");
 				result.append(endStr);
-				result.append(CommUtil.getExpStack(ex));
-				log.fatal(result);
+				if (ex instanceof BindException be) {
+					FieldError error = be.getBindingResult().getFieldErrors().get(0);
+					result.append(error.getField()).append("--").append(error.getDefaultMessage());
+					log.warn(result);
+				} else if (ex instanceof SystemException se) {
+					result.append(se.getMessage());
+					log.warn(result);
+				} else if (ex instanceof TokenException te) {
+					result.append("未获取到refreshToken");
+					log.warn(result);
+				} else {
+					result.append(CommUtil.getExpStack(ex));
+					log.fatal(result);
+				}
 			} catch (Exception e) {
 			}
 		}

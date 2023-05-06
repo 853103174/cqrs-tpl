@@ -31,7 +31,7 @@ public class ${className}QryExe {
         return service.page(bo);
     }
 
-    @GetMapping("/view/${id}")
+    @GetMapping("/view/{id}")
     public ${className}ViewVO view(@PathVariable Long id) {
         return service.view(id);
     }

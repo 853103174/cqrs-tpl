@@ -4,7 +4,10 @@ package ${packageName};
 import java.math.BigInteger;
 <%}%>
 <%if(importDate==true){%>
-import java.util.Date;
+import java.time.LocalDate;
+<%}%>
+<%if(importTime==true){%>
+import java.time.LocalDateTime;
 <%}%>
 
 import lombok.Getter;

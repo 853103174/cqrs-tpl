@@ -69,7 +69,7 @@ public class GenerateJavaFileUtils {
 	 */
 	private static void createPackage(String packages) {
 		String basePath = System.getProperty("java.class.path");
-		String basepackagename = basePath.substring(0, basePath.indexOf(";") - 9) + "/src/main/java/com/sdnc/account";
+		String basepackagename = basePath.substring(0, basePath.indexOf("bin")) + "src/main/java/com/sdnc/account";
 		String command_assembler = basepackagename + "/application/assembler/%s/";
 		command_assembler_name = String.format(command_assembler, packages);
 		File dir = new File(command_assembler_name);
@@ -134,27 +134,23 @@ public class GenerateJavaFileUtils {
 		try {
 			conn = getConnection();
 			dbmd = conn.getMetaData();
-			ResultSet resultSet = dbmd.getTables(null, "%", tablename, new String[] { "TABLE" });
+			ResultSet resultSet = dbmd.getTables(conn.getCatalog(), getSchema(conn), tablename,
+					new String[] { "TABLE", "REMARKS" });
 			while (resultSet.next()) {
-				String tableName = resultSet.getString("TABLE_NAME");
 				tableremarks = resultSet.getString("REMARKS");
-				if (tableName.equals(tablename)) {
-					DatabaseMetaData dmd = conn.getMetaData();
-					ResultSet rs = dmd.getColumns(conn.getCatalog(), getSchema(conn), tableName, "%");
-					while (rs.next()) {
-						map.put(processColnames(rs.getString("COLUMN_NAME")),
-								rs.getString("REMARKS").replaceAll("\n", " "));
-					}
+				DatabaseMetaData dmd = conn.getMetaData();
+				ResultSet rs = dmd.getColumns(conn.getCatalog(), getSchema(conn), tablename, "%");
+				while (rs.next()) {
+					map.put(processColnames(rs.getString("COLUMN_NAME")),
+							rs.getString("REMARKS").replaceAll("\n", " "));
+				}
 
-					rs = dmd.getPrimaryKeys(null, null, tableName);
-					while (rs.next()) {
-						pk = processColnames(rs.getString(4));
-					}
+				rs = dmd.getPrimaryKeys(conn.getCatalog(), getSchema(conn), tablename);
+				while (rs.next()) {
+					pk = processColnames(rs.getString(4));
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			releaseConnection(conn);
@@ -166,12 +162,12 @@ public class GenerateJavaFileUtils {
 	 *
 	 * @param conn
 	 * @return
-	 * @throws Exception
+	 * @throws SQLException
 	 */
-	private static String getSchema(Connection conn) throws Exception {
+	private static String getSchema(Connection conn) throws SQLException {
 		String schema = conn.getMetaData().getUserName();
-		if ((schema == null) || (schema.length() == 0)) {
-			throw new Exception("ORACLE数据库模式不允许为空");
+		if (schema == null || schema.length() == 0) {
+			throw new SQLException("ORACLE数据库模式不允许为空");
 		}
 
 		return schema.toUpperCase();
@@ -247,27 +243,18 @@ public class GenerateJavaFileUtils {
 	 * 将数据库类型转换为Java类型
 	 *
 	 * @param sqlType
-	 * @param scale
+	 * @param javaType
 	 * @return
 	 */
-	private static String sqlType2JavaType(String sqlType, int scale, int size) {
-		if (sqlType.equals("int") || sqlType.equals("mediumint unsigned") || sqlType.equals("tinyint")
-				|| sqlType.equals("tinyint unsigned") || sqlType.equals("smallint unsigned")) {
-			return "Integer";
-		} else if (sqlType.equals("int unsigned") || sqlType.equals("long")) {
-			return "Long";
-		} else if (sqlType.equals("float")) {
-			return "float";
-		} else if (sqlType.equals("bigint unsigned")) {
-			return "BigInteger";
-		} else if (sqlType.equals("double") || sqlType.equals("double unsigned")) {
-			return "Double";
+	private static String sqlType2JavaType(String sqlType, String javaType) {
+		if (sqlType.equals("date")) {
+			return "LocalDate";
+		} else if (sqlType.equals("datetime") || sqlType.equals("timestamp")) {
+			return "LocalDateTime";
 		} else if (sqlType.equals("decimal")) {
-			return scale == 0 ? (size < 10 ? "Integer" : "Long") : "Double";
-		} else if (sqlType.equals("datetime") || sqlType.equals("date") || sqlType.equals("timestamp")) {
-			return "Date";
+			return "Double";
 		} else {
-			return "String";
+			return javaType.substring(javaType.lastIndexOf(".") + 1);
 		}
 	}
 
@@ -280,21 +267,21 @@ public class GenerateJavaFileUtils {
 		Connection localConnection = null;
 		try {
 			String basePath = System.getProperty("java.class.path");
-			String confs = basePath.substring(0, basePath.indexOf(";")) + "/application.yml";
+			String confs = basePath.substring(0, basePath.indexOf("bin")) + "src/main/resources/dev/application.yml";
 			Map<String, String> conf = new Yaml().load(new FileInputStream(new File(confs)));
-			String jdbcUrl = ONode.load(conf).select("$.spring.datasource.jdbcUrl").toString().replaceAll("\"", "");
-			Class.forName("com.mysql.cj.jdbc.Driver");
+			ONode node = ONode.load(conf).select("$.spring.datasource");
+			String jdbcUrl = node.get("jdbcUrl").getString();
+			String username = node.get("username").getString();
+			String password = node.get("password").getString();
+			String driverClassName = node.get("driverClassName").getString();
+			Class.forName(driverClassName);
 			Properties props = new Properties();
-			props.put("user", "root");
-			props.put("password", "SDnc@mysql#1024");
+			props.put("user", username);
+			props.put("password", password);
 			props.put("useInformationSchema", "true");
 			localConnection = DriverManager.getConnection(jdbcUrl, props);
 			localConnection.setAutoCommit(false);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
+		} catch (ClassNotFoundException | SQLException | FileNotFoundException e) {
 			e.printStackTrace();
 		}
 
@@ -313,7 +300,6 @@ public class GenerateJavaFileUtils {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			conn = null;
 		}
 	}
 
@@ -324,10 +310,9 @@ public class GenerateJavaFileUtils {
 		Connection conn = getConnection();
 		String strsql = "SELECT * FROM " + tablename;
 		try {
-			int scale = -1;
-			int precision = -1;
 			String colName = null;
 			String colType = null;
+			String javaType = null;
 			String className = hump(tablename);
 			String poPackage = command_po_name.substring(command_po_name.indexOf("com/"), command_po_name.length() - 1)
 					.replaceAll("/", ".");
@@ -335,33 +320,39 @@ public class GenerateJavaFileUtils {
 			pstmt.executeQuery();
 			ResultSetMetaData rsmd = pstmt.getMetaData();
 			KV paras = KV.by("packageName", poPackage).set("tableRemark", tableremarks).set("tableName", tablename)
-					.set("className", className);
+					.set("className", className).set("importBigInteger", false).set("importDate", false)
+					.set("importDateAt", false).set("importTime", false).set("importTimeAt", false);
 			List<KV> columns = new ArrayList<>();
 			for (int i = 0; i < rsmd.getColumnCount(); i++) {
 				KV column = new KV();
-				scale = rsmd.getScale(i + 1);
-				precision = rsmd.getPrecision(i + 1);
 				colName = processColnames(rsmd.getColumnName(i + 1));
 				colType = rsmd.getColumnTypeName(i + 1).toLowerCase();
+				javaType = sqlType2JavaType(colType, rsmd.getColumnClassName(i + 1));
 				if (pk.equals(colName)) {
 					column.set("pk", true);
-				} else {
-					if (colType.startsWith("bigint")) {
-						paras.set("importBigInteger", true);
-					}
 				}
-				if ("datetime".equals(colType)) {
+				if (javaType.equals("BigInteger")) {
+					paras.set("importBigInteger", true);
+				}
+				if (javaType.equals("LocalDate")) {
 					paras.set("importDate", true);
 
 					if (!"createAt".equals(colName) && !"updateAt".equals(colName)) {
-						paras.set("importAt", true);
+						paras.set("importDateAt", true);
+					}
+				}
+				if (javaType.equals("LocalDateTime")) {
+					paras.set("importTime", true);
+
+					if (!"createAt".equals(colName) && !"updateAt".equals(colName)) {
+						paras.set("importTimeAt", true);
 					}
 				}
 				column.set("colName", colName);
 				column.set("maxSize", rsmd.getColumnDisplaySize(i + 1));
 				column.set("colNameToUpper", firstCharToUpperCase(colName));
 				column.set("remark", map.get(colName));
-				column.set("javaType", sqlType2JavaType(colType, scale, precision));
+				column.set("javaType", javaType);
 				columns.add(column);
 			}
 			paras.set("columns", columns);
@@ -403,9 +394,6 @@ public class GenerateJavaFileUtils {
 					.substring(command_businessobject_name.indexOf("com/"), command_businessobject_name.length() - 1)
 					.replaceAll("/", ".");
 			paras.set("packageName", doPackage);
-			if (paras.isNull("importAt")) {
-				paras.set("importAt", false);
-			}
 			sb = new StringBuffer();
 			sb.append(command_businessobject_name);
 			sb.append(className).append("PageBO.java");
@@ -437,9 +425,7 @@ public class GenerateJavaFileUtils {
 			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
 
 			System.out.println("Entity生成成功***********");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (SQLException | IOException e) {
 			e.printStackTrace();
 		} finally {
 			releaseConnection(conn);
@@ -469,11 +455,7 @@ public class GenerateJavaFileUtils {
 			tpl.binding(paras);
 			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
 			System.out.println("Mapper生成成功***********");
-		} catch (BeetlException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (BeetlException | IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -546,11 +528,7 @@ public class GenerateJavaFileUtils {
 			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
 
 			System.out.println("Service生成成功***********");
-		} catch (BeetlException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (BeetlException | IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -598,11 +576,7 @@ public class GenerateJavaFileUtils {
 			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
 
 			System.out.println("Controller生成成功***********");
-		} catch (BeetlException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (BeetlException | IOException e) {
 			e.printStackTrace();
 		}
 	}

@@ -36,7 +36,7 @@ public class ${className}QrySvc {
      */
     public PageResult<${className}PageVO> page(${className}PageBO bo) {
         PageResult<${className}PO> result = mapper.createLambdaQuery()
-                .andEq(${className}PO::getId, Query.filterNull(bo.getId()))
+                //.andEq(${className}PO::getId, Query.filterNull(bo.getId()))
                 .page(bo.getPageNum(), bo.getPageSize());
         Function<${className}PO, ${className}PageVO> function = po -> assembler.pageAs(po);
 

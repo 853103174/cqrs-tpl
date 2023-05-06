@@ -35,8 +35,6 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(BindException.class)
 	public ResponseEntity<String> bindException(BindException ex) {
 		FieldError error = ex.getBindingResult().getFieldErrors().get(0);
-		// KV kv=KV.by("field", error.getField()).set("message",
-		// error.getDefaultMessage());
 
 		return ResponseEntity
 				.status(HttpStatus.BAD_REQUEST)

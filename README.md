@@ -6,9 +6,9 @@
 #### 软件架构
 1. Java-v17
 2. Gradle-v7.5.1
-3. SpringBoot-v3.0.2
-4. BeetlSQL-v3.19.3
-5. Jedis-v4.3.1
+3. SpringBoot-v3.0.6
+4. BeetlSQL-v3.22.0
+5. Jedis-v4.3.2
 
 #### 软件分包
 1. application(应用层): 组织业务场景, 编排业务, 隔离场景对领域层的差异
@@ -29,3 +29,4 @@ gradle build -Dfile=test
 4. [凤凰架构](https://icyfenix.cn/)
 5. [Java全栈知识体系](https://pdai.tech/)
 6. [SpringBoot内置工具类](https://mp.weixin.qq.com/s/mFovEO3jQGGP2e6TaFxuXg)
+7. [请求日志组件](https://mp.weixin.qq.com/s/HQPa_XphTFRYTFU30xzk9A)

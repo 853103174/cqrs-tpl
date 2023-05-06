@@ -8,11 +8,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 import org.springframework.util.StreamUtils;
-import org.springframework.util.StringUtils;
 
 import com.sdnc.common.constant.HeaderConstant;
 import com.sdnc.common.kits.AESKit;
 import com.sdnc.common.kits.RSAKit;
+import com.sdnc.common.kits.StrKit;
 
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
@@ -57,7 +57,7 @@ public class DecodeRequestBodyWrapper extends HttpServletRequestWrapper {
 			final String aesSign = getHeader(HeaderConstant.AES_SIGN);
 			final String aseKey = RSAKit.decode(aesSign);
 			final String plaintextBody = AESKit.decode(aseKey, ciphertextBody);
-			if (StringUtils.hasText(plaintextBody)) {
+			if (StrKit.notBlank(plaintextBody)) {
 				final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
 						plaintextBody.getBytes(StandardCharsets.UTF_8));
 				decodeInputStream = new ServletInputStream() {

@@ -1,6 +1,6 @@
 package ${packageName};
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,13 +34,13 @@ public class ${className}CmdSvc {
      * @param bo
      */
     public void create(${className}CreateBO bo) {
-        Date now = new Date();
+        LocalDateTime now = LocalDateTime.now();
         Long userId = AccessContext.getAccessUser().getId();
         ${className}PO po = assembler.createAs(bo);
-        po.setCreateBy(userId);
-        po.setCreateAt(now);
-        po.setUpdateBy(userId);
-        po.setUpdateAt(now);
+        //po.setCreateBy(userId);
+        //po.setCreateAt(now);
+        //po.setUpdateBy(userId);
+        //po.setUpdateAt(now);
         //po.setDel(0);
         mapper.insertTemplate(po);
     }
@@ -51,11 +51,11 @@ public class ${className}CmdSvc {
      * @param bo
      */
     public void modify(${className}ModifyBO bo) {
-        Date now = new Date();
+        LocalDateTime now = LocalDateTime.now();
         Long userId = AccessContext.getAccessUser().getId();
         ${className}PO po = assembler.modifyAs(bo);
-        po.setUpdateBy(userId);
-        po.setUpdateAt(now);
+        //po.setUpdateBy(userId);
+        //po.setUpdateAt(now);
         mapper.updateTemplateById(po);
     }
 

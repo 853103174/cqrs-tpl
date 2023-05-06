@@ -5,7 +5,7 @@ spring:
     poolName: BeeCP-Trade-Hall   #BeeCP连接池
     username: root
     password: SDnc@mysql#1024
-    jdbcUrl: jdbc:mysql://127.0.0.1:3306/fresh?useUnicode=true&characterEncoding=utf-8&useServerPrepStmts=true&cachePrepStmts=true&prepStmtCacheSize=256&prepStmtCacheSqlLimit=2048
+    jdbcUrl: jdbc:mysql://127.0.0.1:3306/fresh?useUnicode=true&tinyInt1isBit=false&characterEncoding=utf-8&useServerPrepStmts=true&cachePrepStmts=true&prepStmtCacheSize=256&prepStmtCacheSqlLimit=2048
     driverClassName: com.mysql.cj.jdbc.Driver
     maxActive: 10   #连接池最大个数
     initialSize: 3   #连接池初始大小

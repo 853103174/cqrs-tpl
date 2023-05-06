@@ -1,6 +1,7 @@
 package com.sdnc.account.application.assembler.passport;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 
 /**
  *
@@ -8,7 +9,7 @@ import org.mapstruct.Mapper;
  *
  *
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface PassportVOAs {
 
 }
