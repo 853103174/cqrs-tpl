@@ -26,7 +26,7 @@ import log.util.CommUtil;
  */
 @Order(-1000)
 @Component
-public class GlobalExceptionResolver implements HandlerExceptionResolver {
+public class PrintExceptionResolver implements HandlerExceptionResolver {
 
 	private static final TinyLog log = TinyLog.getInstance();
 	private static final String endStr = TinyLog.endStr;
@@ -68,6 +68,7 @@ public class GlobalExceptionResolver implements HandlerExceptionResolver {
 					log.fatal(result);
 				}
 			} catch (Exception e) {
+				// e.printStackTrace();
 			}
 		} else {
 			try {

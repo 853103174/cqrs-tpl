@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -48,7 +47,7 @@ public class RedisCache<T> {
 	 * @param timeUnit
 	 *                 时间颗粒度
 	 */
-	public void putValue(final String key, T value, final Integer timeout, final TimeUnit timeUnit) {
+	public void putValue(String key, T value, long timeout, TimeUnit timeUnit) {
 		redis.opsForValue().set(key, value, timeout, timeUnit);
 	}
 
@@ -59,9 +58,8 @@ public class RedisCache<T> {
 	 *            缓存键值
 	 * @return 缓存键值对应的数据
 	 */
-	public T getValue(final String key) {
-		ValueOperations<String, T> operation = redis.opsForValue();
-		return operation.get(key);
+	public T getValue(String key) {
+		return redis.opsForValue().get(key);
 	}
 
 	/**
@@ -73,7 +71,7 @@ public class RedisCache<T> {
 	 *               待缓存的List数据
 	 * @return 缓存的对象个数
 	 */
-	public long putList(final String key, final List<T> values) {
+	public long putList(String key, Collection<T> values) {
 		Long count = redis.opsForList().rightPushAll(key, values);
 		return count == null ? 0 : count;
 	}
@@ -85,7 +83,7 @@ public class RedisCache<T> {
 	 *            缓存的键值
 	 * @return 缓存键值对应的数据
 	 */
-	public List<T> getList(final String key) {
+	public List<T> getList(String key) {
 		return redis.opsForList().range(key, 0, -1);
 	}
 
@@ -98,15 +96,9 @@ public class RedisCache<T> {
 	 *               缓存的数据
 	 * @return 缓存的Set对象
 	 */
-	// public BoundSetOperations<String, T> putSet(final String key, final Set<T>
-	// values) {
-	// BoundSetOperations<String, T> setOperation = redis.boundSetOps(key);
-	// Iterator<T> it = values.iterator();
-	// while (it.hasNext()) {
-	// setOperation.add(it.next());
-	// }
-	// return setOperation;
-	// }
+	public void putSet(String key, T[] values) {
+		redis.opsForSet().add(key, values);
+	}
 
 	/**
 	 * 获得缓存的Set
@@ -115,7 +107,7 @@ public class RedisCache<T> {
 	 *            缓存的键值
 	 * @return 缓存的Set对象
 	 */
-	public Set<T> getSet(final String key) {
+	public Set<T> getSet(String key) {
 		return redis.opsForSet().members(key);
 	}
 
@@ -127,7 +119,7 @@ public class RedisCache<T> {
 	 * @param entries
 	 *                多个Hash值
 	 */
-	public void putEntries(final String key, final Map<String, T> entries) {
+	public void putEntries(String key, Map<String, T> entries) {
 		redis.opsForHash().putAll(key, entries);
 	}
 
@@ -138,7 +130,7 @@ public class RedisCache<T> {
 	 *            缓存的键值
 	 * @return 多个Hash值
 	 */
-	public Map<String, T> getEntries(final String key) {
+	public Map<String, T> getEntries(String key) {
 		HashOperations<String, String, T> opsForHash = redis.opsForHash();
 		return opsForHash.entries(key);
 	}
@@ -147,42 +139,42 @@ public class RedisCache<T> {
 	 * 往Hash中存入数据
 	 *
 	 * @param key
-	 *              缓存的键值
-	 * @param hKey
-	 *              Hash键
+	 *                缓存的键值
+	 * @param hashKey
+	 *                Hash键
 	 * @param value
-	 *              值
+	 *                值
 	 */
-	public void putMapValue(final String key, final String hKey, final T value) {
-		redis.opsForHash().put(key, hKey, value);
+	public void putMapValue(String key, String hashKey, T value) {
+		redis.opsForHash().put(key, hashKey, value);
 	}
 
 	/**
 	 * 获取Hash中的数据
 	 *
 	 * @param key
-	 *             缓存的键值
-	 * @param hKey
-	 *             Hash键
+	 *                缓存的键值
+	 * @param hashKey
+	 *                Hash键
 	 * @return Hash中的对象
 	 */
-	public T getMapValue(final String key, final String hKey) {
+	public T getMapValue(String key, String hashKey) {
 		HashOperations<String, String, T> opsForHash = redis.opsForHash();
-		return opsForHash.get(key, hKey);
+		return opsForHash.get(key, hashKey);
 	}
 
 	/**
 	 * 获取多个Hash中的数据
 	 *
 	 * @param key
-	 *              缓存的键值
-	 * @param hKeys
-	 *              Hash键集合
+	 *                 缓存的键值
+	 * @param hashKeys
+	 *                 Hash键集合
 	 * @return Hash对象集合
 	 */
-	public List<T> getMultiMapValue(final String key, final Collection<String> hKeys) {
+	public List<T> getMultiMapValue(String key, Collection<String> hashKeys) {
 		HashOperations<String, String, T> opsForHash = redis.opsForHash();
-		return opsForHash.multiGet(key, hKeys);
+		return opsForHash.multiGet(key, hashKeys);
 	}
 
 	/**
@@ -192,7 +184,7 @@ public class RedisCache<T> {
 	 *                字符串前缀
 	 * @return 对象列表
 	 */
-	public Collection<String> keys(final String pattern) {
+	public Set<String> keys(String pattern) {
 		return redis.keys(pattern);
 	}
 
@@ -205,7 +197,7 @@ public class RedisCache<T> {
 	 *                超时时间(秒)
 	 * @return true=设置成功；false=设置失败
 	 */
-	public boolean expire(final String key, final long timeout) {
+	public boolean expire(String key, long timeout) {
 		return expire(key, timeout, TimeUnit.SECONDS);
 	}
 
@@ -220,7 +212,7 @@ public class RedisCache<T> {
 	 *                时间单位
 	 * @return true=设置成功；false=设置失败
 	 */
-	public boolean expire(final String key, final long timeout, final TimeUnit unit) {
+	public boolean expire(String key, long timeout, TimeUnit unit) {
 		return redis.expire(key, timeout, unit);
 	}
 
@@ -230,7 +222,7 @@ public class RedisCache<T> {
 	 * @param key
 	 *            缓存的键值
 	 */
-	public boolean hasKey(final String key) {
+	public boolean hasKey(String key) {
 		return redis.hasKey(key);
 	}
 
@@ -240,7 +232,7 @@ public class RedisCache<T> {
 	 * @param key
 	 *            缓存的键值
 	 */
-	public Long increment(final String key) {
+	public Long increment(String key) {
 		return redis.boundValueOps(key).increment();
 	}
 
@@ -250,7 +242,7 @@ public class RedisCache<T> {
 	 * @param key
 	 *            缓存的键值
 	 */
-	public boolean delete(final String key) {
+	public boolean delete(String key) {
 		return redis.delete(key);
 	}
 
@@ -261,7 +253,7 @@ public class RedisCache<T> {
 	 *                   多个对象
 	 * @return 删除的个数
 	 */
-	public long delete(final Collection<String> collection) {
+	public long delete(Collection<String> collection) {
 		return redis.delete(collection);
 	}
 

@@ -3,6 +3,7 @@ package com.sdnc.common.conf;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -29,13 +30,16 @@ public class DecodeRequestBodyWrapper extends HttpServletRequestWrapper {
 	// 已经解密完成的InputStream在后续处理中使用
 	private ServletInputStream decodeInputStream;
 
+	/**
+	 * 解密请求信息
+	 */
 	public DecodeRequestBodyWrapper(HttpServletRequest request) {
 		super(request);
 	}
 
 	@Override
 	public BufferedReader getReader() throws IOException {
-		return super.getReader();
+		return new BufferedReader(new InputStreamReader(getInputStream()));
 	}
 
 	/**
@@ -48,39 +52,54 @@ public class DecodeRequestBodyWrapper extends HttpServletRequestWrapper {
 	 */
 	@Override
 	public ServletInputStream getInputStream() throws IOException {
-		if (Objects.isNull(decodeInputStream)) {
-			final ServletInputStream inputStream = super.getInputStream();
-			if (Objects.isNull(inputStream)) {
-				return null;
-			}
-			String ciphertextBody = StreamUtils.copyToString(inputStream, Charset.defaultCharset());
-			final String aesSign = getHeader(HeaderConstant.AES_SIGN);
-			final String aseKey = RSAKit.decode(aesSign);
-			final String plaintextBody = AESKit.decode(aseKey, ciphertextBody);
-			if (StrKit.notBlank(plaintextBody)) {
-				final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
-						plaintextBody.getBytes(StandardCharsets.UTF_8));
-				decodeInputStream = new ServletInputStream() {
-					@Override
-					public boolean isFinished() {
-						return false;
-					}
+		final ServletInputStream inputStream = super.getInputStream();
+		if (Objects.isNull(inputStream)) {
+			return null;
+		}
+		String ciphertextBody = StreamUtils.copyToString(inputStream, Charset.defaultCharset());
+		final String aesSign = getHeader(HeaderConstant.AES_SIGN);
+		final String aseKey = RSAKit.decode(aesSign);
+		final String plaintextBody = AESKit.decode(aseKey, ciphertextBody);
+		if (StrKit.notBlank(plaintextBody)) {
+			final ByteArrayInputStream stream = new ByteArrayInputStream(
+					plaintextBody.getBytes(StandardCharsets.UTF_8));
+			decodeInputStream = new ServletInputStream() {
+				private boolean finished = false;
 
-					@Override
-					public boolean isReady() {
-						return false;
-					}
+				@Override
+				public boolean isFinished() {
+					return finished;
+				}
 
-					@Override
-					public void setReadListener(ReadListener listener) {
-					}
+				@Override
+				public int available() throws IOException {
+					return stream.available();
+				}
 
-					@Override
-					public int read() {
-						return byteArrayInputStream.read();
+				@Override
+				public void close() throws IOException {
+					super.close();
+					stream.close();
+				}
+
+				@Override
+				public boolean isReady() {
+					return true;
+				}
+
+				@Override
+				public void setReadListener(ReadListener readListener) {
+					throw new UnsupportedOperationException();
+				}
+
+				public int read() throws IOException {
+					int data = stream.read();
+					if (data == -1) {
+						finished = true;
 					}
-				};
-			}
+					return data;
+				}
+			};
 		}
 
 		return decodeInputStream;

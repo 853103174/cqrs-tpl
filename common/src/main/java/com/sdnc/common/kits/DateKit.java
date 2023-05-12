@@ -13,7 +13,7 @@ import java.util.Date;
  * 日期工具类
  *
  */
-public class DateKit {
+public final class DateKit {
 
     /**
      * 年月日时分秒

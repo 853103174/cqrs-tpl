@@ -12,7 +12,7 @@ import javax.crypto.spec.SecretKeySpec;
  * AES加密
  *
  */
-public class AESKit {
+public final class AESKit {
 
 	/**
 	 * 采用AES加密算法

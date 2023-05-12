@@ -9,7 +9,7 @@ import com.sdnc.common.exception.SystemException;
  * 断言工具类
  *
  */
-public class ValidKit extends Assert {
+public final class ValidKit extends Assert {
 
 	/**
 	 * 不为空

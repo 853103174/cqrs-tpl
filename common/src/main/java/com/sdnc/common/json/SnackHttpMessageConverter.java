@@ -2,7 +2,7 @@ package com.sdnc.common.json;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class SnackHttpMessageConverter<T> implements HttpMessageConverter<T> {
 	@Override
 	public T read(Class<? extends T> clazz, HttpInputMessage inputMessage)
 			throws IOException, HttpMessageNotReadableException {
-		String json = StreamUtils.copyToString(inputMessage.getBody(), Charset.forName("UTF-8"));
+		String json = StreamUtils.copyToString(inputMessage.getBody(), StandardCharsets.UTF_8);
 
 		return ONode.deserialize(json, clazz);
 	}
@@ -52,7 +52,7 @@ public class SnackHttpMessageConverter<T> implements HttpMessageConverter<T> {
 			throws IOException, HttpMessageNotWritableException {
 		try (OutputStream output = outputMessage.getBody();) {
 			Options options = Options.of(Feature.WriteNumberUseString, Feature.WriteDateUseFormat);
-			byte[] bytes = ONode.stringify(obj, options).getBytes(Charset.forName("UTF-8"));
+			byte[] bytes = ONode.stringify(obj, options).getBytes(StandardCharsets.UTF_8);
 			for (int i = 0, size = bytes.length; i < size; ++i) {
 				output.write(bytes[i]);
 			}

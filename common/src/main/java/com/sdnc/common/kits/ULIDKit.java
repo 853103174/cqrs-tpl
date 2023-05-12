@@ -12,7 +12,7 @@ import com.github.f4b6a3.ulid.UlidCreator;
  * 生成全局唯一ID
  *
  */
-public class ULIDKit {
+public final class ULIDKit {
 
 	private static String alphabet = "ABCDEFGHIGKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz~!@#$%^*()|<>";
 

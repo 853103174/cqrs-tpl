@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
  * Response输出信息封装
  *
  */
-public class HttpWriterKit {
+public final class HttpWriterKit {
 
     private static final String jsonContentType = "application/json;charset=UTF-8";
 

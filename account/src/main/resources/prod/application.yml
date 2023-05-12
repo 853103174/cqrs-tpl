@@ -15,14 +15,15 @@ spring:
     validAssumeTime: 5000   #连接测试的间隔时间(毫秒)
 
   # redis 配置
-  redis:
-    # 地址
-    host: 127.0.0.1
-    port: 9736
-    # 数据库索引
-    database: 2
-    # 密码
-    password: SDNC@redis#1024
+  data:
+    redis:
+      # 地址
+      host: 127.0.0.1
+      port: 9736
+      # 数据库索引
+      database: 2
+      # 密码
+      password: SDNC@redis#1024
 
 beetlsql:
   # sqlManage，可以配置多个，用逗号隔开

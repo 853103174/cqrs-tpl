@@ -11,12 +11,14 @@ import java.util.Base64;
 
 import javax.crypto.Cipher;
 
+import com.sdnc.common.exception.SystemException;
+
 /**
  *
  * RSA加密
  *
  */
-public class RSAKit {
+public final class RSAKit {
 
 	public static final String CHARSET = "UTF-8";
 	public static final String RSA_ALGORITHM = "RSA";
@@ -31,7 +33,7 @@ public class RSAKit {
 			e.printStackTrace();
 		}
 
-		throw new RuntimeException("解码异常");
+		throw new SystemException("解码异常");
 	}
 
 	/**
@@ -79,7 +81,7 @@ public class RSAKit {
 
 			return new String(Base64.getEncoder().encode(cipher.doFinal(data.getBytes(CHARSET))));
 		} catch (Exception e) {
-			throw new RuntimeException("加密字符串[" + data + "]时遇到异常", e);
+			throw new SystemException("加密字符串时遇到异常");
 		}
 	}
 
@@ -99,7 +101,7 @@ public class RSAKit {
 
 			return new String(cipher.doFinal(Base64.getDecoder().decode(data.getBytes(CHARSET))));
 		} catch (Exception e) {
-			throw new RuntimeException("解密字符串[" + data + "]时遇到异常", e);
+			throw new SystemException("解密字符串时遇到异常");
 		}
 	}
 

@@ -8,7 +8,7 @@ import java.util.Map;
  * Map封装
  *
  */
-public class KV extends HashMap<Object, Object> {
+public final class KV extends HashMap<Object, Object> {
 
 	public KV() {
 	}

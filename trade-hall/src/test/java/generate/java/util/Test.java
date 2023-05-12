@@ -3,9 +3,6 @@ package generate.java.util;
 public class Test {
 
 	public static void main(String[] args) {
-		String basePath = System.getProperty("java.class.path");
-		System.out.println(basePath.substring(0, basePath.indexOf(";") - 9));
-
 		// LocalDateTime date = LocalDateTime.of(2022, 3, 1, 0, 0, 0);
 		// Duration duration = Duration.between(date, LocalDateTime.now());
 		// for (long i = 0, days = duration.toDays(); i < days; ++i) {
