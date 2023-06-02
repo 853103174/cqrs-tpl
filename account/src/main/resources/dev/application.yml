@@ -36,9 +36,9 @@ beetlsql:
     ds: primaryDataSource
     # 指明 mapper 类的结尾，扫描到以 Mapper 结尾的类会为其自动生成代理类，注册为 Spring 的 Bean
     # 默认扫描 Mapper 结尾，可不配置。如果你不是 xxxMapper 这样以 Mapper 结尾的，则需要配置
-    daoSuffix: Mapper
+    daoSuffix: Dao
     # 要扫描 Mapper 的包名
-    basePackage: com.sdnc.account.infrastructure
+    basePackage: com.sdnc.account.infrastructure.dao
     # POJO 和数据表列的名称转换，如驼峰 userName 转换为下划线的 user_name
     nameConversion: org.beetl.sql.core.UnderlinedNameConversion
     # 数据库方言

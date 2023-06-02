@@ -5,15 +5,15 @@ import org.springframework.stereotype.Component;
 import com.sdnc.common.constant.TokenConstants;
 import com.sdnc.common.redis.RedisCache;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
- * Token上下文, 用于处理当前操作的Token信息
+ * Token上下文, 用于获取当前操作的Token信息
  *
  */
-@AllArgsConstructor
 @Component
+@RequiredArgsConstructor
 public class TokenContext {
 
 	private final RedisCache<Long> redisCache;

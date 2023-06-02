@@ -13,12 +13,15 @@ import java.time.LocalDateTime;
 import org.beetl.sql.annotation.entity.AssignID;
 import org.beetl.sql.annotation.entity.Table;
 
+import lombok.experimental.Accessors;
+
 /**
  *
  * ${tableRemark}
  *
  *
  */
+@Accessors(chain = true)
 @Table(name = "${tableName}")
 public class ${className}PO {
 

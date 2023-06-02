@@ -45,12 +45,20 @@ public class RedisConfigurer implements CachingConfigurer {
 	@Bean
 	public RedisConnectionFactory connectionFactory(RedisProperties properties) {
 		JedisPoolConfig poolConfig = new JedisPoolConfig();
+		poolConfig.setMaxTotal(30);
+		poolConfig.setMaxIdle(30);
+		poolConfig.setMinIdle(1);
+		poolConfig.setNumTestsPerEvictionRun(-1);
+		poolConfig.setTestOnBorrow(true);
+		poolConfig.setTestOnReturn(false);
+		poolConfig.setBlockWhenExhausted(false);
 		JedisClientConfiguration clientConfig = JedisClientConfiguration
 				.builder()
 				.usePooling()
 				.poolConfig(poolConfig)
 				.and()
 				.readTimeout(Duration.ofSeconds(2))
+				.connectTimeout(Duration.ofSeconds(2))
 				.build();
 		RedisStandaloneConfiguration standaloneConfig = new RedisStandaloneConfiguration();
 		standaloneConfig.setHostName(properties.getHost());

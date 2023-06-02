@@ -10,7 +10,7 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
@@ -18,7 +18,7 @@ import lombok.AllArgsConstructor;
  *
  */
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RedisCache<T> {
 
 	private final RedisTemplate<String, T> redis;

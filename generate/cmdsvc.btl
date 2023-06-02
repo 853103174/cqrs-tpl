@@ -6,13 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sdnc.common.auth.AccessContext;
-import ${importPOAs}.${className}POAs;
 import ${importPO}.${className}PO;
-import ${importMapper}.${className}Mapper;
+import ${importDao}.${className}Dao;
 import ${importDO}.${className}CreateBO;
 import ${importDO}.${className}ModifyBO;
 
-import lombok.AllArgsConstructor;
+import io.github.linpeilie.Converter;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
@@ -21,12 +21,12 @@ import lombok.AllArgsConstructor;
  *
  */
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
 public class ${className}CmdSvc {
 
-    private final ${className}POAs assembler;
-    private final ${className}Mapper mapper;
+    private final Converter converter;
+    private final ${className}Dao dao;
 
     /**
      * 创建
@@ -36,13 +36,13 @@ public class ${className}CmdSvc {
     public void create(${className}CreateBO bo) {
         LocalDateTime now = LocalDateTime.now();
         Long userId = AccessContext.getAccessUser().getId();
-        ${className}PO po = assembler.createAs(bo);
+        ${className}PO po = converter.convert(bo, ${className}PO.class);
         //po.setCreateBy(userId);
         //po.setCreateAt(now);
         //po.setUpdateBy(userId);
         //po.setUpdateAt(now);
         //po.setDel(0);
-        mapper.insertTemplate(po);
+        dao.insertTemplate(po);
     }
 
     /**
@@ -53,10 +53,10 @@ public class ${className}CmdSvc {
     public void modify(${className}ModifyBO bo) {
         LocalDateTime now = LocalDateTime.now();
         Long userId = AccessContext.getAccessUser().getId();
-        ${className}PO po = assembler.modifyAs(bo);
+        ${className}PO po = converter.convert(bo, ${className}PO.class);
         //po.setUpdateBy(userId);
         //po.setUpdateAt(now);
-        mapper.updateTemplateById(po);
+        dao.updateTemplateById(po);
     }
 
 }

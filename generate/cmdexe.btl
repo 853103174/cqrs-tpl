@@ -13,7 +13,7 @@ import ${importSvc}.${className}CmdSvc;
 import ${importDO}.${className}CreateBO;
 import ${importDO}.${className}ModifyBO;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
@@ -22,7 +22,7 @@ import lombok.AllArgsConstructor;
  *
  */
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/cmd/${path}")
 public class ${className}CmdExe {
 

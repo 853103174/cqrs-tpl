@@ -1,4 +1,4 @@
-package com.sdnc.common.conf;
+package com.sdnc.common.config;
 
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
@@ -12,7 +12,7 @@ import com.sdnc.common.json.SnackHttpMessageConverter;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
  *
  */
 @Configuration
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class GlobalConfigurer implements WebMvcConfigurer {
 
 	private final IdempotentInterceptor idempotentInterceptor;

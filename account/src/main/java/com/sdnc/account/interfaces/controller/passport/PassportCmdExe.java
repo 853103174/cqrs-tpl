@@ -1,6 +1,8 @@
 package com.sdnc.account.interfaces.controller.passport;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,16 +10,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sdnc.account.application.service.passport.PassportCmdSvc;
-import com.sdnc.account.interfaces.businessobject.passport.LoginBO;
-import com.sdnc.account.interfaces.businessobject.passport.PhoneCheckBO;
-import com.sdnc.account.interfaces.businessobject.passport.PhoneSubmitBO;
-import com.sdnc.account.interfaces.businessobject.passport.RefreshTokenBO;
-import com.sdnc.account.interfaces.businessobject.passport.RegisterBO;
-import com.sdnc.account.interfaces.businessobject.passport.ResetPasswordBO;
+import com.sdnc.account.domain.businessobject.passport.LoginBO;
+import com.sdnc.account.domain.businessobject.passport.PhoneCheckBO;
+import com.sdnc.account.domain.businessobject.passport.PhoneSubmitBO;
+import com.sdnc.account.domain.businessobject.passport.RefreshTokenBO;
+import com.sdnc.account.domain.businessobject.passport.RegisterBO;
+import com.sdnc.account.domain.businessobject.passport.ResetPasswordBO;
 import com.sdnc.common.kits.KV;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
@@ -25,8 +28,9 @@ import lombok.AllArgsConstructor;
  *
  *
  */
+@Validated
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/cmd/passport")
 public class PassportCmdExe {
 
@@ -88,6 +92,17 @@ public class PassportCmdExe {
     @PostMapping("/phone-submit")
     public void phoneSubmit(@Valid @RequestBody PhoneSubmitBO bo) {
         // phoneSubmitService.execute(assembler.phoneSubmitAssembler(dto));
+    }
+
+    /**
+     * 注销账号
+     *
+     * @param id ID
+     * @return
+     */
+    @DeleteMapping("/cancel")
+    public void cancel(@NotNull(message = "ID不能为空") Long id) {
+        System.err.println(id);
     }
 
 }

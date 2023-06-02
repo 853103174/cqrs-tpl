@@ -18,7 +18,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
@@ -27,7 +27,7 @@ import lombok.AllArgsConstructor;
  */
 @Component
 @Order(100)
-@AllArgsConstructor
+@RequiredArgsConstructor
 @EnableConfigurationProperties(PassportUrlProperties.class)
 public class PassportFilter implements Filter {
 

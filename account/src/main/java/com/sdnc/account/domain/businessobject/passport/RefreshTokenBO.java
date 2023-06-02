@@ -1,4 +1,4 @@
-package com.sdnc.account.interfaces.businessobject.passport;
+package com.sdnc.account.domain.businessobject.passport;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 
 /**
  *
- * APP用户登录注册
+ * APP用户刷新Token
  *
  *
  */

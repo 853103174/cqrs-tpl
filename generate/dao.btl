@@ -6,12 +6,12 @@ import org.springframework.stereotype.Repository;
 import ${importPO}.${className}PO;
 
 /**
- * 
+ *
  * ${tableRemark}
- * 
- * 
+ *
+ *
  */
 @Repository
-public interface ${className}Mapper extends BaseMapper<${className}PO> {
+public interface ${className}Dao extends BaseMapper<${className}PO> {
 
 }

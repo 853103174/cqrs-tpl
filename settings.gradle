@@ -1,2 +1,2 @@
 rootProject.name = 'cqrs-tpl'
-include('common', 'account', 'trade-hall')
+include 'common', 'account', 'trade-hall'

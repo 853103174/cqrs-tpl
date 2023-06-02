@@ -1,4 +1,4 @@
-package com.sdnc.common.conf;
+package com.sdnc.common.config;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -13,7 +13,7 @@ import com.sdnc.common.redis.RedisCache;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
@@ -21,7 +21,7 @@ import lombok.AllArgsConstructor;
  *
  */
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class IdempotentInterceptor implements HandlerInterceptor {
 
 	private final RedisCache<Boolean> cache;

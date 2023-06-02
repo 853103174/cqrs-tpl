@@ -40,8 +40,9 @@ public class GenerateJavaFileUtils {
 	private static String command_service_name = "";
 	private static String command_vo_name = "";
 	private static String command_po_name = "";
-	private static String command_mapper_name = "";
+	private static String command_dao_name = "";
 	private static String command_metaq_name = "";
+	private static String command_event_name = "";
 	private static String command_controller_name = "";
 	private static String command_businessobject_name = "";
 	/***** 包名结束 *****/
@@ -51,12 +52,12 @@ public class GenerateJavaFileUtils {
 	private static String baseTemplatePath; // 模板引擎文件夹路径
 
 	public static void main(String[] args) {
-		tablename = "acct_integral";
-		createPackage("integral");
+		tablename = "area";
+		createPackage("area");
 
 		getTableInfo();
 		table2entity();
-		table2mapper();
+		table2dao();
 		table2service();
 		table2controller();
 	}
@@ -70,7 +71,7 @@ public class GenerateJavaFileUtils {
 	private static void createPackage(String packages) {
 		String basePath = System.getProperty("java.class.path");
 		String basepackagename = basePath.substring(0, basePath.indexOf("bin")) + "src/main/java/com/sdnc/account";
-		String command_assembler = basepackagename + "/application/assembler/%s/";
+		String command_assembler = basepackagename + "/application/assembler/";
 		command_assembler_name = String.format(command_assembler, packages);
 		File dir = new File(command_assembler_name);
 		if (!dir.exists()) {
@@ -94,27 +95,35 @@ public class GenerateJavaFileUtils {
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		String command_mapper = basepackagename + "/infrastructure/mapper/%s/";
-		command_mapper_name = String.format(command_mapper, packages);
-		dir = new File(command_mapper_name);
+		String command_bo = basepackagename + "/domain/businessobject/%s/";
+		command_businessobject_name = String.format(command_bo, packages);
+		dir = new File(command_businessobject_name);
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		String command_metaq = basepackagename + "/infrastructure/metaq/%s/";
+		String command_mapper = basepackagename + "/infrastructure/dao/%s/";
+		command_dao_name = String.format(command_mapper, packages);
+		dir = new File(command_dao_name);
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		// MQ订阅
+		String command_metaq = basepackagename + "/interfaces/metaq/";
 		command_metaq_name = String.format(command_metaq, packages);
 		dir = new File(command_metaq_name);
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		// MQ发布
+		String command_event = basepackagename + "/application/event/";
+		command_event_name = String.format(command_event, packages);
+		dir = new File(command_event_name);
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
 		String command_controller = basepackagename + "/interfaces/controller/%s/";
 		command_controller_name = String.format(command_controller, packages);
 		dir = new File(command_controller_name);
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
-		String command_bo = basepackagename + "/interfaces/businessobject/%s/";
-		command_businessobject_name = String.format(command_bo, packages);
-		dir = new File(command_businessobject_name);
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
@@ -247,12 +256,14 @@ public class GenerateJavaFileUtils {
 	 * @return
 	 */
 	private static String sqlType2JavaType(String sqlType, String javaType) {
-		if (sqlType.equals("date")) {
-			return "LocalDate";
-		} else if (sqlType.equals("datetime") || sqlType.equals("timestamp")) {
+		if (sqlType.equals("datetime") || sqlType.equals("timestamp")) {
 			return "LocalDateTime";
+		} else if (sqlType.equals("date")) {
+			return "LocalDate";
 		} else if (sqlType.equals("decimal")) {
 			return "Double";
+		} else if (sqlType.equals("bigint")) {
+			return "Long";
 		} else {
 			return javaType.substring(javaType.lastIndexOf(".") + 1);
 		}
@@ -360,7 +371,7 @@ public class GenerateJavaFileUtils {
 			StringBuffer sb = new StringBuffer();
 			sb.append(command_po_name);
 			sb.append(className).append("PO.java");
-			FileResourceLoader resourceLoader = new FileResourceLoader(baseTemplatePath, "utf-8");
+			FileResourceLoader resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
 			Configuration cfg = Configuration.defaultConfiguration();
 			GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 			Template tpl = gt.getTemplate("/po.btl");
@@ -369,11 +380,11 @@ public class GenerateJavaFileUtils {
 			// PageVO
 			String boPackage = command_vo_name.substring(command_vo_name.indexOf("com/"), command_vo_name.length() - 1)
 					.replaceAll("/", ".");
-			paras.set("packageName", boPackage);
+			paras.set("packageName", boPackage).set("importPO", poPackage);
 			sb = new StringBuffer();
 			sb.append(command_vo_name);
 			sb.append(className).append("PageVO.java");
-			resourceLoader = new FileResourceLoader(baseTemplatePath, "utf-8");
+			resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
 			cfg = Configuration.defaultConfiguration();
 			gt = new GroupTemplate(resourceLoader, cfg);
 			tpl = gt.getTemplate("/pagevo.btl");
@@ -383,7 +394,7 @@ public class GenerateJavaFileUtils {
 			sb = new StringBuffer();
 			sb.append(command_vo_name);
 			sb.append(className).append("ViewVO.java");
-			resourceLoader = new FileResourceLoader(baseTemplatePath, "utf-8");
+			resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
 			cfg = Configuration.defaultConfiguration();
 			gt = new GroupTemplate(resourceLoader, cfg);
 			tpl = gt.getTemplate("/viewvo.btl");
@@ -397,7 +408,7 @@ public class GenerateJavaFileUtils {
 			sb = new StringBuffer();
 			sb.append(command_businessobject_name);
 			sb.append(className).append("PageBO.java");
-			resourceLoader = new FileResourceLoader(baseTemplatePath, "utf-8");
+			resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
 			cfg = Configuration.defaultConfiguration();
 			gt = new GroupTemplate(resourceLoader, cfg);
 			tpl = gt.getTemplate("/pagebo.btl");
@@ -407,7 +418,7 @@ public class GenerateJavaFileUtils {
 			sb = new StringBuffer();
 			sb.append(command_businessobject_name);
 			sb.append(className).append("CreateBO.java");
-			resourceLoader = new FileResourceLoader(baseTemplatePath, "utf-8");
+			resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
 			cfg = Configuration.defaultConfiguration();
 			gt = new GroupTemplate(resourceLoader, cfg);
 			tpl = gt.getTemplate("/createbo.btl");
@@ -417,7 +428,7 @@ public class GenerateJavaFileUtils {
 			sb = new StringBuffer();
 			sb.append(command_businessobject_name);
 			sb.append(className).append("ModifyBO.java");
-			resourceLoader = new FileResourceLoader(baseTemplatePath, "utf-8");
+			resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
 			cfg = Configuration.defaultConfiguration();
 			gt = new GroupTemplate(resourceLoader, cfg);
 			tpl = gt.getTemplate("/modifybo.btl");
@@ -435,26 +446,26 @@ public class GenerateJavaFileUtils {
 	/**
 	 * 生成Mapper
 	 */
-	public static void table2mapper() {
+	public static void table2dao() {
 		try {
 			String className = hump(tablename);
-			String packageName = command_mapper_name
-					.substring(command_mapper_name.indexOf("com/"), command_mapper_name.length() - 1)
+			String packageName = command_dao_name
+					.substring(command_dao_name.indexOf("com/"), command_dao_name.length() - 1)
 					.replaceAll("/", ".");
 			StringBuffer sb = new StringBuffer();
-			sb.append(command_mapper_name);
-			sb.append(className).append("Mapper.java");
+			sb.append(command_dao_name);
+			sb.append(className).append("Dao.java");
 			String poPackage = command_po_name.substring(command_po_name.indexOf("com/"), command_po_name.length() - 1)
 					.replaceAll("/", ".");
 			KV paras = KV.by("packageName", packageName).set("tableRemark", tableremarks).set("className", className)
 					.set("importPO", poPackage);
-			FileResourceLoader resourceLoader = new FileResourceLoader(baseTemplatePath, "utf-8");
+			FileResourceLoader resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
 			Configuration cfg = Configuration.defaultConfiguration();
 			GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
-			Template tpl = gt.getTemplate("/mapper.btl");
+			Template tpl = gt.getTemplate("/dao.btl");
 			tpl.binding(paras);
 			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
-			System.out.println("Mapper生成成功***********");
+			System.out.println("Dao生成成功***********");
 		} catch (BeetlException | IOException e) {
 			e.printStackTrace();
 		}
@@ -472,13 +483,10 @@ public class GenerateJavaFileUtils {
 			StringBuffer sb = new StringBuffer();
 			sb.append(command_service_name);
 			sb.append(className).append("CmdSvc.java");
-			String assemblerPackage = command_assembler_name
-					.substring(command_assembler_name.indexOf("com/"), command_assembler_name.length() - 1)
-					.replaceAll("/", ".");
 			String poPackage = command_po_name.substring(command_po_name.indexOf("com/"), command_po_name.length() - 1)
 					.replaceAll("/", ".");
-			String mapperPackage = command_mapper_name
-					.substring(command_mapper_name.indexOf("com/"), command_mapper_name.length() - 1)
+			String daoPackage = command_dao_name
+					.substring(command_dao_name.indexOf("com/"), command_dao_name.length() - 1)
 					.replaceAll("/", ".");
 			String doPackage = command_businessobject_name
 					.substring(command_businessobject_name.indexOf("com/"), command_businessobject_name.length() - 1)
@@ -486,10 +494,10 @@ public class GenerateJavaFileUtils {
 			String boPackage = command_vo_name.substring(command_vo_name.indexOf("com/"), command_vo_name.length() - 1)
 					.replaceAll("/", ".");
 			KV paras = KV.by("packageName", packageName).set("tableRemark", tableremarks).set("className", className)
-					.set("importPOAs", assemblerPackage).set("importPO", poPackage).set("importMapper", mapperPackage)
-					.set("importDO", doPackage).set("importBO", boPackage);
+					.set("importPO", poPackage).set("importDao", daoPackage).set("importDO", doPackage)
+					.set("importBO", boPackage);
 			// CmdSvc
-			FileResourceLoader resourceLoader = new FileResourceLoader(baseTemplatePath, "utf-8");
+			FileResourceLoader resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
 			Configuration cfg = Configuration.defaultConfiguration();
 			GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 			Template tpl = gt.getTemplate("/cmdsvc.btl");
@@ -499,31 +507,10 @@ public class GenerateJavaFileUtils {
 			sb = new StringBuffer();
 			sb.append(command_service_name);
 			sb.append(className).append("QrySvc.java");
-			resourceLoader = new FileResourceLoader(baseTemplatePath, "utf-8");
+			resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
 			cfg = Configuration.defaultConfiguration();
 			gt = new GroupTemplate(resourceLoader, cfg);
 			tpl = gt.getTemplate("/qrysvc.btl");
-			tpl.binding(paras);
-			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
-			// VOAs
-			paras.set("packageName", assemblerPackage);
-			sb = new StringBuffer();
-			sb.append(command_assembler_name);
-			sb.append(className).append("VOAs.java");
-			resourceLoader = new FileResourceLoader(baseTemplatePath, "utf-8");
-			cfg = Configuration.defaultConfiguration();
-			gt = new GroupTemplate(resourceLoader, cfg);
-			tpl = gt.getTemplate("/voas.btl");
-			tpl.binding(paras);
-			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
-			// POAs
-			sb = new StringBuffer();
-			sb.append(command_assembler_name);
-			sb.append(className).append("POAs.java");
-			resourceLoader = new FileResourceLoader(baseTemplatePath, "utf-8");
-			cfg = Configuration.defaultConfiguration();
-			gt = new GroupTemplate(resourceLoader, cfg);
-			tpl = gt.getTemplate("/poas.btl");
 			tpl.binding(paras);
 			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
 
@@ -558,7 +545,7 @@ public class GenerateJavaFileUtils {
 			StringBuffer sb = new StringBuffer();
 			sb.append(command_controller_name);
 			sb.append(className).append("CmdExe.java");
-			FileResourceLoader resourceLoader = new FileResourceLoader(baseTemplatePath, "utf-8");
+			FileResourceLoader resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
 			Configuration cfg = Configuration.defaultConfiguration();
 			GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 			Template tpl = gt.getTemplate("/cmdexe.btl");
@@ -568,7 +555,7 @@ public class GenerateJavaFileUtils {
 			sb = new StringBuffer();
 			sb.append(command_controller_name);
 			sb.append(className).append("QryExe.java");
-			resourceLoader = new FileResourceLoader(baseTemplatePath, "utf-8");
+			resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
 			cfg = Configuration.defaultConfiguration();
 			gt = new GroupTemplate(resourceLoader, cfg);
 			tpl = gt.getTemplate("/qryexe.btl");

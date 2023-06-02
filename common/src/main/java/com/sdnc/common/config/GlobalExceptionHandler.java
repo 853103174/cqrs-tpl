@@ -1,4 +1,4 @@
-package com.sdnc.common.conf;
+package com.sdnc.common.config;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.sdnc.common.exception.SystemException;
 import com.sdnc.common.exception.TokenException;
+
+import jakarta.validation.ConstraintViolationException;
 
 /**
  *
@@ -30,7 +32,20 @@ public class GlobalExceptionHandler {
 	}
 
 	/**
-	 * 校验异常
+	 * 基本类型校验异常
+	 */
+	@ExceptionHandler(ConstraintViolationException.class)
+	public ResponseEntity<String> bindException(ConstraintViolationException ex) {
+		String error = ex.getConstraintViolations().stream().findFirst().map(cv -> cv.getMessage()).get();
+
+		return ResponseEntity
+				.status(HttpStatus.BAD_REQUEST)
+				.header("Content-Type", "text/plain;charset=UTF-8")
+				.body(error);
+	}
+
+	/**
+	 * 实体类型校验异常
 	 */
 	@ExceptionHandler(BindException.class)
 	public ResponseEntity<String> bindException(BindException ex) {

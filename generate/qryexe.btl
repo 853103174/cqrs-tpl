@@ -11,7 +11,7 @@ import ${importBO}.${className}PageVO;
 import ${importBO}.${className}ViewVO;
 import ${importDO}.${className}PageBO;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
  *
  */
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/qry/${path}")
 public class ${className}QryExe {
 

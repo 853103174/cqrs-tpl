@@ -1,4 +1,4 @@
-package com.sdnc.common.conf;
+package com.sdnc.common.config;
 
 import java.io.InputStreamReader;
 import java.util.Map;
@@ -16,6 +16,7 @@ import com.sdnc.common.exception.TokenException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.ValidationException;
 import log.tiny.TinyLog;
 import log.util.CommUtil;
 
@@ -57,18 +58,20 @@ public class PrintExceptionResolver implements HandlerExceptionResolver {
 					FieldError error = be.getBindingResult().getFieldErrors().get(0);
 					result.append(error.getField()).append("--").append(error.getDefaultMessage());
 					log.warn(result);
-				} else if (ex instanceof SystemException se) {
-					result.append(se.getMessage());
+				} else if (ex instanceof ValidationException ve) {
+					result.append(ve.getMessage());
 					log.warn(result);
 				} else if (ex instanceof TokenException te) {
-					result.append("未获取到refreshToken");
+					result.append("未获取到RefreshToken");
 					log.warn(result);
+				} else if (ex instanceof SystemException se) {
+					result.append(se.getMessage());
+					log.fatal(result);
 				} else {
 					result.append(CommUtil.getExpStack(ex));
 					log.fatal(result);
 				}
 			} catch (Exception e) {
-				// e.printStackTrace();
 			}
 		} else {
 			try {
@@ -89,12 +92,15 @@ public class PrintExceptionResolver implements HandlerExceptionResolver {
 					FieldError error = be.getBindingResult().getFieldErrors().get(0);
 					result.append(error.getField()).append("--").append(error.getDefaultMessage());
 					log.warn(result);
-				} else if (ex instanceof SystemException se) {
-					result.append(se.getMessage());
+				} else if (ex instanceof ValidationException ve) {
+					result.append(ve.getMessage());
 					log.warn(result);
 				} else if (ex instanceof TokenException te) {
-					result.append("未获取到refreshToken");
+					result.append("未获取到RefreshToken");
 					log.warn(result);
+				} else if (ex instanceof SystemException se) {
+					result.append(se.getMessage());
+					log.fatal(result);
 				} else {
 					result.append(CommUtil.getExpStack(ex));
 					log.fatal(result);

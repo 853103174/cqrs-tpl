@@ -10,8 +10,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 <%}%>
 
+import ${importPO}.${className}PO;
+
+import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /**
  *
@@ -21,6 +25,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@Accessors(chain = true)
+@AutoMapper(target = ${className}PO.class)
 public class ${className}PageVO {
 
 <%for(cm in columns){%>

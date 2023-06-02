@@ -6,8 +6,8 @@
 #### 软件架构
 1. Java-v17
 2. Gradle-v7.5.1
-3. SpringBoot-v3.0.6
-4. BeetlSQL-v3.22.0
+3. SpringBoot-v3.1.0
+4. BeetlSQL-v3.23.1
 5. Jedis-v4.3.2
 
 #### 软件分包
@@ -32,3 +32,4 @@ gradle build -Dfile=test
 7. [SpringBoot内置工具类](https://mp.weixin.qq.com/s/mFovEO3jQGGP2e6TaFxuXg)
 8. [Redis命令补充](https://github.com/iyayu/RedisUtil)
 9. [请求日志组件](https://mp.weixin.qq.com/s/HQPa_XphTFRYTFU30xzk9A)
+10. [通过注解自动生成Spring配置文件](https://mp.weixin.qq.com/s/VO39ZN_7uO1srMuHFxu9hQ)

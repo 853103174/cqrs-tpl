@@ -5,8 +5,8 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sdnc.account.interfaces.businessobject.passport.LoginBO;
-import com.sdnc.account.interfaces.businessobject.passport.RegisterBO;
+import com.sdnc.account.domain.businessobject.passport.LoginBO;
+import com.sdnc.account.domain.businessobject.passport.RegisterBO;
 import com.sdnc.common.constant.TokenConstants;
 import com.sdnc.common.exception.SystemException;
 import com.sdnc.common.exception.TokenException;
@@ -14,7 +14,7 @@ import com.sdnc.common.kits.KV;
 import com.sdnc.common.kits.ULIDKit;
 import com.sdnc.common.redis.RedisCache;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
@@ -23,7 +23,7 @@ import lombok.AllArgsConstructor;
  *
  */
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
 public class PassportCmdSvc {
 

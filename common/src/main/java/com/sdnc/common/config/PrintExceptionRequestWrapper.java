@@ -1,4 +1,4 @@
-package com.sdnc.common.conf;
+package com.sdnc.common.config;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
