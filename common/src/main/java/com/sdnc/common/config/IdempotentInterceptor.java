@@ -57,7 +57,7 @@ public class IdempotentInterceptor implements HandlerInterceptor {
 			CompletableFuture.runAsync(() -> {
 				try {
 					Thread.sleep(3000);
-					cache.delete(keys.toString());
+					cache.unlink(keys.toString());
 				} catch (InterruptedException e) {
 				}
 			});

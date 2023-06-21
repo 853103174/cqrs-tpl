@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 import org.beetl.sql.annotation.entity.AssignID;
 import org.beetl.sql.annotation.entity.Table;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
@@ -21,8 +23,10 @@ import lombok.experimental.Accessors;
  *
  *
  */
+@Getter
+@Setter
 @Accessors(chain = true)
-@Table(name = "${tableName}")
+@Table(name = "${tableName}", assignID = true)
 public class ${className}PO {
 
 <%for(cm in columns){%>
@@ -35,20 +39,4 @@ public class ${className}PO {
     private ${cm.javaType} ${cm.colName};
 <%}%>
 
-<%for(cm in columns){%>
-    /**
-     * ${cm.remark}
-     */
-    public ${cm.javaType} get${cm.colNameToUpper}() {
-        return ${cm.colName};
-    }
-
-    /**
-     * ${cm.remark}
-     */
-    public void set${cm.colNameToUpper}(${cm.javaType} ${cm.colName}) {
-        this.${cm.colName} = ${cm.colName};
-    }
-
-<%}%>
 }

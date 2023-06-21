@@ -257,4 +257,25 @@ public class RedisCache<T> {
 		return redis.delete(collection);
 	}
 
+	/**
+	 * 异步删除单个对象
+	 *
+	 * @param key
+	 *            缓存的键值
+	 */
+	public boolean unlink(String key) {
+		return redis.unlink(key);
+	}
+
+	/**
+	 * 异步删除集合对象
+	 *
+	 * @param collection
+	 *                   多个对象
+	 * @return 删除的个数
+	 */
+	public long unlink(Collection<String> collection) {
+		return redis.unlink(collection);
+	}
+
 }

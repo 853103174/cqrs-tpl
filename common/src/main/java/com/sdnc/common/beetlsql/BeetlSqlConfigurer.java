@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
 
 import org.beetl.sql.core.IDAutoGen;
+import org.beetl.sql.core.Interceptor;
 import org.beetl.sql.core.SQLManager;
 import org.beetl.sql.core.SQLReady;
 import org.beetl.sql.starter.SQLManagerCustomize;
@@ -44,6 +45,14 @@ public class BeetlSqlConfigurer {
 
 	@Bean
 	public SQLManagerCustomize sqlManagerCustomize() {
+		Interceptor[] inters = primarySQLManager.getInters();
+		Interceptor[] newInterceptors = new Interceptor[inters.length + 1];
+		newInterceptors[0] = new CustomizeSQLInterceptor();
+		for (int i = 0, length = inters.length; i < length; ++i) {
+			newInterceptors[i + 1] = inters[i];
+		}
+		primarySQLManager.setInters(newInterceptors);
+
 		return (sqlManagerName, manager) -> {
 
 			// 将BigDecimal映射为BigInteger

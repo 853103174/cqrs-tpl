@@ -1,6 +1,8 @@
 server:
   port: 8811
 spring:
+  profiles:
+    active: dev
   datasource:
     poolName: BeeCP-Trade-Hall #BeeCP连接池
     username: root
@@ -45,3 +47,15 @@ beetlsql:
     dbStyle: org.beetl.sql.core.db.MySqlStyle
     # 是否是开发模式
     dev: true
+
+# Token校验忽略的URL
+passport:
+  url:
+    ignore:
+      - /qry/area/page
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

@@ -27,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 @Transactional(rollbackFor = Exception.class)
 public class PassportCmdSvc {
 
-    // private final PassportPOAs assembler;
     // private final UserMapper mapper;
     private final RedisCache<Object> cache;
 
@@ -92,7 +91,7 @@ public class PassportCmdSvc {
         }
         KV kv = KV.by("accessToken", createAccessToken(userId))
                 .set("refreshToken", createRefreshToken(userId));
-        cache.delete(userKey);
+        cache.unlink(userKey);
 
         return kv;
     }

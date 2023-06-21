@@ -1,4 +1,4 @@
-package ${packageName};
+package com.sdnc.trade.application.service.area;
 
 import java.time.LocalDateTime;
 
@@ -6,26 +6,26 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sdnc.common.auth.AccessContext;
-import ${importPO}.${className}PO;
-import ${importDao}.${className}Dao;
-import ${importDO}.${className}CreateBO;
-import ${importDO}.${className}ModifyBO;
+import com.sdnc.trade.domain.persistantobject.area.AreaPO;
+import com.sdnc.trade.infrastructure.dao.area.AreaDao;
+import com.sdnc.trade.domain.businessobject.area.AreaCreateBO;
+import com.sdnc.trade.domain.businessobject.area.AreaModifyBO;
 
 import io.github.linpeilie.Converter;
 import lombok.RequiredArgsConstructor;
 
 /**
  *
- * ${tableRemark}
+ * 行政区划表
  *
  *
  */
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
-public class ${className}CmdSvc {
+public class AreaCmdSvc {
 
-    private final ${className}Dao dao;
+    private final AreaDao dao;
     private final Converter converter;
 
     /**
@@ -33,10 +33,10 @@ public class ${className}CmdSvc {
      *
      * @param bo
      */
-    public void create(${className}CreateBO bo) {
+    public void create(AreaCreateBO bo) {
         //LocalDateTime now = LocalDateTime.now();
         //Long userId = AccessContext.getAccessUser().getId();
-        ${className}PO po = converter.convert(bo, ${className}PO.class);
+        AreaPO po = converter.convert(bo, AreaPO.class);
         //po.setCreateBy(userId);
         //po.setCreateAt(now);
         //po.setUpdateBy(userId);
@@ -50,10 +50,10 @@ public class ${className}CmdSvc {
      *
      * @param bo
      */
-    public void modify(${className}ModifyBO bo) {
+    public void modify(AreaModifyBO bo) {
         //LocalDateTime now = LocalDateTime.now();
         //Long userId = AccessContext.getAccessUser().getId();
-        ${className}PO po = converter.convert(bo, ${className}PO.class);
+        AreaPO po = converter.convert(bo, AreaPO.class);
         //po.setUpdateBy(userId);
         //po.setUpdateAt(now);
         dao.updateTemplateById(po);

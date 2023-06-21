@@ -1,18 +1,20 @@
 server:
   port: 8811
 spring:
+  profiles:
+    active: test
   datasource:
-    poolName: BeeCP-Trade-Hall   #BeeCP连接池
+    poolName: BeeCP-Trade-Hall #BeeCP连接池
     username: root
     password: SDnc@mysql#1024
     jdbcUrl: jdbc:mysql://127.0.0.1:3306/fresh?useUnicode=true&tinyInt1isBit=false&characterEncoding=utf-8&useServerPrepStmts=true&cachePrepStmts=true&prepStmtCacheSize=256&prepStmtCacheSqlLimit=2048
     driverClassName: com.mysql.cj.jdbc.Driver
-    maxActive: 10   #连接池最大个数
-    initialSize: 3   #连接池初始大小
-    maxWait: 120000   #连接借用等待最大时间(毫秒)
-    fairMode: false   #是否使用公平模式
-    validTestSql: select 1   #连接有效性测试SQL语句
-    validAssumeTime: 5000   #连接测试的间隔时间(毫秒)
+    maxActive: 10 #连接池最大个数
+    initialSize: 3 #连接池初始大小
+    maxWait: 120000 #连接借用等待最大时间(毫秒)
+    fairMode: false #是否使用公平模式
+    validTestSql: select 1 #连接有效性测试SQL语句
+    validAssumeTime: 5000 #连接测试的间隔时间(毫秒)
 
   # redis 配置
   data:

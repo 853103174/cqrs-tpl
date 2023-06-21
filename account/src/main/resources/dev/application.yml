@@ -1,6 +1,8 @@
 server:
   port: 8811
 spring:
+  profiles:
+    active: dev
   datasource:
     poolName: BeeCP-Account #BeeCP连接池
     username: root
