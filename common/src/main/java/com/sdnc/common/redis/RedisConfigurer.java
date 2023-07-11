@@ -45,12 +45,25 @@ public class RedisConfigurer implements CachingConfigurer {
 	@Bean
 	public RedisConnectionFactory connectionFactory(RedisProperties properties) {
 		JedisPoolConfig poolConfig = new JedisPoolConfig();
+		// 连接池中最大连接数
 		poolConfig.setMaxTotal(30);
+		// 连接池中最大空闲的连接数
 		poolConfig.setMaxIdle(30);
-		poolConfig.setMinIdle(1);
+		// 连接池中最少空闲的连接数
+		poolConfig.setMinIdle(30);
+		// 空闲连接的检测周期
+		poolConfig.setTimeBetweenEvictionRuns(Duration.ofMillis(30000));
+		// 连接的最小空闲时间
+		poolConfig.setMinEvictableIdleTime(Duration.ofDays(365));
+		// 向连接池借用连接时是否做连接空闲检测, 空闲超时的连接会被移除
+		poolConfig.setTestWhileIdle(true);
+		// 做空闲连接时, 每次的采样数
 		poolConfig.setNumTestsPerEvictionRun(-1);
+		// 向连接池借用连接时是否做连接有效性检测, 无效连接会被移除, 每次借用多执行一次ping命令
 		poolConfig.setTestOnBorrow(true);
+		// 向连接池归还连接时是否做连接有效性检测, 无效连接会被移除, 每次归还多执行一次ping命令
 		poolConfig.setTestOnReturn(false);
+		// 当连接池用尽后, 调用者是否要等待
 		poolConfig.setBlockWhenExhausted(false);
 		JedisClientConfiguration clientConfig = JedisClientConfiguration
 				.builder()

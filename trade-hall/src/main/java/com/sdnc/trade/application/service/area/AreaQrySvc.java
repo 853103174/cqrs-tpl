@@ -36,7 +36,7 @@ public class AreaQrySvc {
      */
     public PageResult<AreaPageVO> page(AreaPageBO bo) {
         PageResult<AreaPO> result = dao.createLambdaQuery()
-                .andEq(AreaPO::getCode, QueryKit.notNull(bo.getCode()))
+                .andLike(AreaPO::getName, QueryKit.like(bo.getName()))
                 .page(bo.getPageNum(), bo.getPageSize());
         Function<AreaPO, AreaPageVO> function = po -> converter.convert(po, AreaPageVO.class);
 
