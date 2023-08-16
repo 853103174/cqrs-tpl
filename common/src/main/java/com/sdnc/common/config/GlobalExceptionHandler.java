@@ -18,7 +18,7 @@ import jakarta.validation.ConstraintViolationException;
  *
  */
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public final class GlobalExceptionHandler {
 
 	/**
 	 * 业务异常

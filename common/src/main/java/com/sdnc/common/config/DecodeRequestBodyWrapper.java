@@ -25,7 +25,7 @@ import jakarta.servlet.http.HttpServletRequestWrapper;
  * 使用AES解密Request Body
  *
  */
-public class DecodeRequestBodyWrapper extends HttpServletRequestWrapper {
+public final class DecodeRequestBodyWrapper extends HttpServletRequestWrapper {
 
 	// 已经解密完成的InputStream在后续处理中使用
 	private ServletInputStream decodeInputStream;

@@ -8,6 +8,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -27,7 +28,7 @@ import log.util.CommUtil;
  */
 @Order(-1000)
 @Component
-public class PrintExceptionResolver implements HandlerExceptionResolver {
+public final class PrintExceptionResolver implements HandlerExceptionResolver {
 
 	private static final TinyLog log = TinyLog.getInstance();
 	private static final String endStr = TinyLog.endStr;
@@ -51,6 +52,10 @@ public class PrintExceptionResolver implements HandlerExceptionResolver {
 				for (int num; (num = isr.read(buf, 0, buf.length)) != -1;) {
 					result.append(buf, 0, num);
 				}
+				result.append(endStr);
+				result.append("方法:=============================");
+				result.append(endStr);
+				result.append(((HandlerMethod) handler).getResolvedFromHandlerMethod());
 				result.append(endStr);
 				result.append("异常:=============================");
 				result.append(endStr);
@@ -85,6 +90,10 @@ public class PrintExceptionResolver implements HandlerExceptionResolver {
 				result.append("参数:=============================");
 				result.append(endStr);
 				result.append(ONode.stringify(parasMap));
+				result.append(endStr);
+				result.append("方法:=============================");
+				result.append(endStr);
+				result.append(((HandlerMethod) handler).getResolvedFromHandlerMethod());
 				result.append(endStr);
 				result.append("异常:=============================");
 				result.append(endStr);

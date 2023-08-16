@@ -1,11 +1,11 @@
 package com.sdnc.trade.domain.persistantobject.area;
 
-import org.beetl.sql.annotation.entity.AutoID;
+
+import org.beetl.sql.annotation.entity.AssignID;
 import org.beetl.sql.annotation.entity.Table;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
 /**
  *
@@ -15,14 +15,13 @@ import lombok.experimental.Accessors;
  */
 @Getter
 @Setter
-@Accessors(chain = true)
 @Table(name = "area", assignID = true)
-public class AreaPO {
+public final class AreaPO {
 
     /**
      * 编码
      */
-    @AutoID
+    @AssignID("autoId")
     private Integer code;
     /**
      * 名称

@@ -51,7 +51,14 @@ public class BeetlSqlConfigurer {
 		for (int i = 0, length = inters.length; i < length; ++i) {
 			newInterceptors[i + 1] = inters[i];
 		}
+		// primarySQLManager.setSqlManagerExtend(new CustomizeSQLManagerExtend());
 		primarySQLManager.setInters(newInterceptors);
+		// 防火墙功能
+		// FireWall fireWall = new FireWall();
+		// fireWall.setDmlCreateEnable(false);
+		// fireWall.setSqlMaxLength(50);
+		// FireWallConfig fireWallConfig = new FireWallConfig(fireWall);
+		// fireWallConfig.config(primarySQLManager);
 
 		return (sqlManagerName, manager) -> {
 

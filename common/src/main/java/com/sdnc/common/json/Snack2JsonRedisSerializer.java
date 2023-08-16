@@ -9,7 +9,7 @@ import org.springframework.data.redis.serializer.SerializationException;
  * 自定义Redis序列化
  *
  */
-public class Snack2JsonRedisSerializer implements RedisSerializer<Object> {
+public final class Snack2JsonRedisSerializer implements RedisSerializer<Object> {
 
 	@Override
 	public byte[] serialize(Object obj) throws SerializationException {

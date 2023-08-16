@@ -16,7 +16,7 @@ import com.tencentcloudapi.sms.v20190711.models.SendSmsResponse;
  *
  */
 @Component
-public class TencentSms {
+public final class TencentSms {
 
 	private static final String APPID = "";
 	private static final String SECRETID = "";

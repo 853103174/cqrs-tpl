@@ -6,7 +6,7 @@ import org.beetl.sql.core.InterceptorContext;
 /**
  * 定制SQL可实现多租户数据隔离等需求
  */
-public class CustomizeSQLInterceptor implements Interceptor {
+public final class CustomizeSQLInterceptor implements Interceptor {
 
     @Override
     public void before(InterceptorContext ctx) {

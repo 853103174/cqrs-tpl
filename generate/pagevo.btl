@@ -27,7 +27,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @AutoMapper(target = ${className}PO.class)
-public class ${className}PageVO {
+public final class ${className}PageVO {
 
 <%for(cm in columns){%>
     <%

@@ -15,7 +15,6 @@ import org.beetl.sql.annotation.entity.Table;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
 /**
  *
@@ -25,9 +24,8 @@ import lombok.experimental.Accessors;
  */
 @Getter
 @Setter
-@Accessors(chain = true)
 @Table(name = "${tableName}", assignID = true)
-public class ${className}PO {
+public final class ${className}PO {
 
 <%for(cm in columns){%>
     /**

@@ -22,7 +22,7 @@ import org.springframework.util.StreamUtils;
  * 自定义SpringBoot JSON转换器
  *
  */
-public class SnackHttpMessageConverter<T> implements HttpMessageConverter<T> {
+public final class SnackHttpMessageConverter<T> implements HttpMessageConverter<T> {
 
 	@Override
 	public boolean canRead(Class<?> clazz, MediaType mediaType) {

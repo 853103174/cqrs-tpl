@@ -9,11 +9,11 @@ import org.beetl.sql.core.mapping.type.ReadTypeParameter;
 import org.beetl.sql.core.mapping.type.WriteTypeParameter;
 
 /**
- * 
+ *
  * 将Float映射为BigInteger
  *
  */
-public class BigIntTypeHandler extends JavaSqlTypeHandler {
+public final class BigIntTypeHandler extends JavaSqlTypeHandler {
 
 	@Override
 	public Object getValue(ReadTypeParameter typePara) throws SQLException {

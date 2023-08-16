@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Component
 @RequiredArgsConstructor
-public class TokenContext {
+public final class TokenContext {
 
 	private final RedisCache<Long> redisCache;
 

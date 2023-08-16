@@ -31,7 +31,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @AutoMapper(target = ${className}PO.class, reverseConvertGenerate = false)
-public class ${className}ModifyBO {
+public final class ${className}ModifyBO {
 
 <%for(cm in columns){%>
     <%

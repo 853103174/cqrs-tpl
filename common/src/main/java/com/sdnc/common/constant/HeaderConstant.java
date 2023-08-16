@@ -5,7 +5,7 @@ package com.sdnc.common.constant;
  * 请求头常量信息
  *
  */
-public class HeaderConstant {
+public final class HeaderConstant {
 
 	/**
 	 * 手机系统名称

@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * 过滤请求
  */
 @Component
-public class PrintExceptionFilter implements Filter {
+public final class PrintExceptionFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)

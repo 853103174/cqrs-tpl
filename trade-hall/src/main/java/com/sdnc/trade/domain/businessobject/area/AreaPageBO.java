@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class AreaPageBO extends PageQO {
+public final class AreaPageBO extends PageQO {
 
     /**
      * 编码

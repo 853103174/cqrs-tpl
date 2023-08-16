@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 枚举缓存
  */
-public class EnumCache {
+public final class EnumCache {
 
     /**
      * 以枚举任意值构建的缓存结构

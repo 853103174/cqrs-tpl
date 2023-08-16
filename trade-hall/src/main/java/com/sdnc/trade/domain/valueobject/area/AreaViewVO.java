@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @AutoMapper(target = AreaPO.class)
-public class AreaViewVO {
+public final class AreaViewVO {
 
     /**
      * 编码

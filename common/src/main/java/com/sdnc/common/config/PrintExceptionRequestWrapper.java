@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletRequestWrapper;
 /**
  * 自定义Request包装类
  */
-public class PrintExceptionRequestWrapper extends HttpServletRequestWrapper {
+public final class PrintExceptionRequestWrapper extends HttpServletRequestWrapper {
 
     private final String body;
 

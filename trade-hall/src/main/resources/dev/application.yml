@@ -58,7 +58,14 @@ passport:
             - /qry/area/page
 
 management:
+    server:
+        port: 50000 # 启用独立运维端口
+    endpoint: # 开启health端点
+        health:
+            probes:
+                enabled: true
     endpoints:
         web:
             exposure:
-                include: '*'
+                base-path: /actuator # 指定上下文路径，启用相应端点
+                include: health

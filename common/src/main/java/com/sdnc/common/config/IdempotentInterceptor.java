@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Component
 @RequiredArgsConstructor
-public class IdempotentInterceptor implements HandlerInterceptor {
+public final class IdempotentInterceptor implements HandlerInterceptor {
 
 	private final RedisCache<Boolean> cache;
 

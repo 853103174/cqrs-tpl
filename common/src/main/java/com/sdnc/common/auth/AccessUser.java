@@ -5,7 +5,7 @@ package com.sdnc.common.auth;
  * 当前访问用户
  *
  */
-public class AccessUser {
+public final class AccessUser {
 
 	private Long id;
 

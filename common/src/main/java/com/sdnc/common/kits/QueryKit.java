@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.beetl.sql.core.query.interfacer.StrongValue;
 
-public class QueryKit {
+public final class QueryKit {
 
     /**
      * 判断查询条件的值是否为空集合

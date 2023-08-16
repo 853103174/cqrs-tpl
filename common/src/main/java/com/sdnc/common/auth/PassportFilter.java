@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 @Order(100)
 @RequiredArgsConstructor
 @EnableConfigurationProperties(PassportUrlProperties.class)
-public class PassportFilter implements Filter {
+public final class PassportFilter implements Filter {
 
 	private final TokenContext tokenContext;
 	private final PassportUrlProperties urlProperties;

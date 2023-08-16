@@ -5,7 +5,7 @@ package com.sdnc.common.auth;
  * 用户对象上下文, 用于处理当前操作的用户信息
  *
  */
-public class AccessContext {
+public final class AccessContext {
 
 	private static final ThreadLocal<AccessUser> LOCAL = new ThreadLocal<>();
 

@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Component
 @RequiredArgsConstructor
-public class RedisCache<T> {
+public final class RedisCache<T> {
 
 	private final RedisTemplate<String, T> redis;
 

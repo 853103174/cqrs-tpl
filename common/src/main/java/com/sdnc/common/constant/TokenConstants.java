@@ -5,7 +5,7 @@ package com.sdnc.common.constant;
  * 令牌相关常量信息
  *
  */
-public class TokenConstants {
+public final class TokenConstants {
 
 	/**
 	 * APP访问令牌Key

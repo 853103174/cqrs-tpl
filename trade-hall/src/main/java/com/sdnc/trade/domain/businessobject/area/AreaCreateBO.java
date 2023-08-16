@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @AutoMapper(target = AreaPO.class, reverseConvertGenerate = false)
-public class AreaCreateBO {
+public final class AreaCreateBO {
 
     /**
      * 编码

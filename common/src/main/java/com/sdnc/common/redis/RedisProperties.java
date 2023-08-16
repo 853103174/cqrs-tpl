@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  */
 @ConfigurationProperties(prefix = "spring.data.redis")
-public class RedisProperties {
+public final class RedisProperties {
 
     private String host;
     private int port;

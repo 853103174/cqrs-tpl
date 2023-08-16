@@ -25,7 +25,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class ${className}PageBO extends PageQO {
+public final class ${className}PageBO extends PageQO {
 
 <%for(cm in columns){%>
     <%

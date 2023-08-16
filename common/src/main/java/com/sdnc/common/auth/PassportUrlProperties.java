@@ -11,7 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  */
 @ConfigurationProperties(prefix = "passport.url")
-public class PassportUrlProperties {
+public final class PassportUrlProperties {
 
 	private List<String> ignore;
 
