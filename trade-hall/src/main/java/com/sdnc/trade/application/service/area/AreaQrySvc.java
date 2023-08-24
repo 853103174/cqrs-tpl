@@ -1,5 +1,6 @@
 package com.sdnc.trade.application.service.area;
 
+import java.util.List;
 import java.util.function.Function;
 
 import org.beetl.sql.core.page.PageResult;
@@ -44,12 +45,22 @@ public class AreaQrySvc {
     }
 
     /**
+     * 获取父编码下的子区域
+     *
+     * @param parentCode
+     * @return
+     */
+    public List<AreaPageVO> allList(Integer parentCode) {
+        return dao.allList(parentCode);
+    }
+
+    /**
      * 查询单个
      *
      * @param id
      * @return
      */
-    public AreaViewVO view(Long id) {
+    public AreaViewVO view(Integer id) {
         return converter.convert(dao.single(id), AreaViewVO.class);
     }
 

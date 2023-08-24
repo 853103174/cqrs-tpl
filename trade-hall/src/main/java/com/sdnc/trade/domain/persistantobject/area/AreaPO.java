@@ -6,6 +6,7 @@ import org.beetl.sql.annotation.entity.Table;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /**
  *
@@ -15,6 +16,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@Accessors(chain = true)
 @Table(name = "area", assignID = true)
 public final class AreaPO {
 

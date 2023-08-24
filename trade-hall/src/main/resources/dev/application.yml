@@ -9,8 +9,8 @@ spring:
     datasource:
         poolName: BeeCP-Trade-Hall #BeeCP连接池
         username: root
-        password: SDnc@mysql#1024
-        jdbcUrl: jdbc:mysql://127.0.0.1:6975/fresh-test?useUnicode=true&tinyInt1isBit=false&characterEncoding=utf-8&useServerPrepStmts=true&cachePrepStmts=true&prepStmtCacheSize=256&prepStmtCacheSqlLimit=2048
+        password: 123456
+        jdbcUrl: jdbc:mysql://127.0.0.1:3306/fresh-test?useUnicode=true&tinyInt1isBit=false&characterEncoding=utf-8&useServerPrepStmts=true&cachePrepStmts=true&prepStmtCacheSize=256&prepStmtCacheSqlLimit=2048
         driverClassName: com.mysql.cj.jdbc.Driver
         maxActive: 10 #连接池最大个数
         initialSize: 3 #连接池初始大小
@@ -25,12 +25,12 @@ spring:
     data:
         redis:
             # 地址
-            host: 127.0.0.1
-            port: 9736
+            host: 192.168.217.4
+            port: 6379
             # 数据库索引
             database: 2
             # 密码
-            password: SDNC@redis#1024
+            #password: SDNC@redis#1024
 
 beetlsql:
     # sqlManage，可以配置多个，用逗号隔开
@@ -56,6 +56,7 @@ passport:
     url:
         ignore:
             - /qry/area/page
+            - /qry/area/allList
 
 management:
     server:

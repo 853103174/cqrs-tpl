@@ -14,8 +14,14 @@ allprojects {
 
     repositories {
         mavenLocal()
+		mavenCentral()
         maven { url 'https://maven.aliyun.com/repository/public' }
-        maven { url 'https://repo2.maven.org/maven2' }
+        maven { url 'https://app.camunda.com/nexus/content/groups/public' }
+        maven { url 'https://maven.alfresco.com/nexus/content/groups/public' }
+        //maven { url 'https://repo.maven.apache.org/maven2' }
+        //maven { url 'https://repo1.maven.org/maven2' }
+        //maven { url 'https://repo2.maven.org/maven2' }
+        //maven { url 'https://repo.spring.io/release' }
         maven { url 'https://jitpack.io' }
     }
 
@@ -30,12 +36,13 @@ configurations {
 //配置共用的资源库信息
 subprojects {
     apply plugin: 'java'
+    //apply plugin: 'application'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
 
 	//配置JVM参数
 	// application {
-	// 	applicationDefaultJvmArgs = ['-Dgreeting.language=en']
+	// 	applicationDefaultJvmArgs = ['-parameters']
 	// }
 
     //根据命令加载不同的配置文件
@@ -82,10 +89,12 @@ subprojects {
 		//implementation 'cn.herodotus.oss:minio-spring-boot-starter:0.4.0'
 		//implementation 'com.feiniaojin.ddd.ecosystem:pie:1.0'
 		//implementation 'org.furyio:fury-core:0.1.0-alpha.1'
-		implementation 'com.ibeetl:sql-springboot-starter:3.23.11-RELEASE'
-		implementation 'com.ibeetl:sql-accelerator:3.23.11-RELEASE'
-		//implementation 'com.ibeetl:sql-dynamic-table:3.23.11-RELEASE'
-		//implementation 'com.ibeetl:sql-firewall:3.23.11-RELEASE'
+		implementation 'com.ibeetl:sql-springboot-starter:3.24.0-RELEASE'
+		implementation 'com.ibeetl:sql-accelerator:3.24.0-RELEASE'
+		//implementation 'com.ibeetl:sql-dynamic-table:3.24.0-RELEASE'
+		//implementation 'com.ibeetl:sql-bean-encrypt:3.24.0-RELEASE'
+		//implementation 'com.ibeetl:sql-firewall:3.24.0-RELEASE'
+		implementation 'com.ibeetl:sql-xml:3.24.0-RELEASE'
 		implementation 'com.github.f4b6a3:ulid-creator:5.2.1'
 		implementation 'com.github.chris2018998:beecp:3.4.2'
 		implementation 'com.gitee.853103174:tinylog:3.4.6'
@@ -102,7 +111,8 @@ subprojects {
 		//testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	}
 
-	// tasks.named('test') {
-	// 	useJUnitPlatform()
-	// }
+	tasks.withType(JavaCompile) {
+		options.compilerArgs << '-parameters'
+		//options.deprecation = true
+	}
 }

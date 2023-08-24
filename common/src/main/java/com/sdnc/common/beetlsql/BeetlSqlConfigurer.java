@@ -9,12 +9,15 @@ import org.beetl.sql.core.IDAutoGen;
 import org.beetl.sql.core.Interceptor;
 import org.beetl.sql.core.SQLManager;
 import org.beetl.sql.core.SQLReady;
+import org.beetl.sql.core.engine.StringSqlTemplateLoader;
+import org.beetl.sql.core.engine.template.BeetlTemplateEngine;
 import org.beetl.sql.starter.SQLManagerCustomize;
+import org.beetl.sql.xml.XMLBeetlSQL;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 
 import com.sdnc.common.auth.AccessContext;
 import com.sdnc.common.redis.RedisCache;
@@ -32,9 +35,13 @@ public class BeetlSqlConfigurer {
 
 	@Resource
 	private RedisCache<Integer> cache;
-	@Lazy
-	@Resource
-	private SQLManager primarySQLManager;
+	// @Lazy
+	// @Resource
+	// private SQLManager primarySQLManager;
+	@Value("${spring.profiles.active}")
+	private String activeProfile;
+	@Value("${beetlsql.primarySQLManager.basePackage}")
+	private String basePackage;
 
 	@Bean
 	// @Primary
@@ -45,22 +52,33 @@ public class BeetlSqlConfigurer {
 
 	@Bean
 	public SQLManagerCustomize sqlManagerCustomize() {
-		Interceptor[] inters = primarySQLManager.getInters();
-		Interceptor[] newInterceptors = new Interceptor[inters.length + 1];
-		newInterceptors[0] = new CustomizeSQLInterceptor();
-		for (int i = 0, length = inters.length; i < length; ++i) {
-			newInterceptors[i + 1] = inters[i];
-		}
-		// primarySQLManager.setSqlManagerExtend(new CustomizeSQLManagerExtend());
-		primarySQLManager.setInters(newInterceptors);
+		SQLManager.javabeanStrict(false);
 		// 防火墙功能
 		// FireWall fireWall = new FireWall();
 		// fireWall.setDmlCreateEnable(false);
-		// fireWall.setSqlMaxLength(50);
+		// fireWall.setSqlMaxLength(500);
 		// FireWallConfig fireWallConfig = new FireWallConfig(fireWall);
 		// fireWallConfig.config(primarySQLManager);
 
 		return (sqlManagerName, manager) -> {
+			Interceptor[] inters = manager.getInters();
+			Interceptor[] newInterceptors = new Interceptor[inters.length + 1];
+			newInterceptors[0] = new CustomizeSQLInterceptor();
+			for (int i = 0, length = inters.length; i < length; ++i) {
+				newInterceptors[i + 1] = inters[i];
+			}
+			manager.setInters(newInterceptors);
+			// 配置xml插件
+			CustomizeXMLClasspathLoader classpathLoader = new CustomizeXMLClasspathLoader(
+					basePackage.replace(".", "/"));
+			classpathLoader.setClassLoaderKit(manager.getClassLoaderKit());
+			classpathLoader.setDbStyle(manager.getDbStyle());
+			manager.setSqlLoader(classpathLoader);
+			BeetlTemplateEngine beetlTemplateEngine = (BeetlTemplateEngine) manager.getSqlTemplateEngine();
+			StringSqlTemplateLoader sqlTemplateLoader = new StringSqlTemplateLoader(classpathLoader);
+			beetlTemplateEngine.getBeetl().getGroupTemplate().setResourceLoader(sqlTemplateLoader);
+			XMLBeetlSQL xmlBeetlSQL = new XMLBeetlSQL();
+			xmlBeetlSQL.config(manager);
 
 			// 将BigDecimal映射为BigInteger
 			// BigIntTypeHandler bigIntTypeHandler = new BigIntTypeHandler();
@@ -73,7 +91,7 @@ public class BeetlSqlConfigurer {
 				@Override
 				public Long nextID(String params) {
 					String sql = "select nextval('all_id_seq')";
-					return primarySQLManager.executeQueryOne(new SQLReady(sql), Long.class);
+					return manager.executeQueryOne(new SQLReady(sql), Long.class);
 				}
 
 			});
