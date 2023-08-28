@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalDependencies">
+    <plugin id="GrepConsole" />
+    <plugin id="ai.codegeex.plugin" />
+    <plugin id="com.dubreuia" />
+    <plugin id="com.intellij.zh" />
+    <plugin id="io.zhile.research.ide-eval-resetter" />
+    <plugin id="izhangzhihao.rainbow.brackets" />
+  </component>
+</project>

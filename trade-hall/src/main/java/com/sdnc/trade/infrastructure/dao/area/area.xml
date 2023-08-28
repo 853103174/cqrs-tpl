@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <beetlsql>
 
-	<sql id="allList">
-		select * from area
-	</sql>
+    <sql id="allList">
+        select * from area
+        <where>
+            parent_code=#{parentCode}
+        </where>
+    </sql>
 
 </beetlsql>

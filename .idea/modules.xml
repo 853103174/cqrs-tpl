@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/account/cqrs-tpl.account.main.iml" filepath="$PROJECT_DIR$/.idea/modules/account/cqrs-tpl.account.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/cqrs-tpl.common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/common/cqrs-tpl.common.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/trade-hall/cqrs-tpl.trade-hall.main.iml" filepath="$PROJECT_DIR$/.idea/modules/trade-hall/cqrs-tpl.trade-hall.main.iml" />
+    </modules>
+  </component>
+</project>
