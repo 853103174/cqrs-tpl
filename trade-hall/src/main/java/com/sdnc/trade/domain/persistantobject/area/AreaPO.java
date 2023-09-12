@@ -1,6 +1,5 @@
 package com.sdnc.trade.domain.persistantobject.area;
 
-
 import org.beetl.sql.annotation.entity.AssignID;
 import org.beetl.sql.annotation.entity.Table;
 

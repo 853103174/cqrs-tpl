@@ -1,11 +1,5 @@
 package com.sdnc.common.json;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
-
 import org.noear.snack.ONode;
 import org.noear.snack.core.Feature;
 import org.noear.snack.core.Options;
@@ -16,6 +10,12 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.StreamUtils;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -57,6 +57,9 @@ public final class SnackHttpMessageConverter<T> implements HttpMessageConverter<
 				output.write(bytes[i]);
 			}
 			output.flush();
+			//if (outputMessage.getHeaders().isEmpty()) {
+			//	outputMessage.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
+			//}
 		} finally {
 
 		}

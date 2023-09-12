@@ -50,6 +50,10 @@ beetlsql:
         dbStyle: org.beetl.sql.core.db.MySqlStyle
         # 是否是开发模式
         dev: true
+        # 要扫描的SQL文件路径
+        sqlPath: com/sdnc/trade/infrastructure/dao
+        # 要扫描的SQL文件编码
+        sqlFileCharset: utf-8
 
 # Token校验忽略的URL
 passport:
@@ -57,6 +61,7 @@ passport:
         ignore:
             - /qry/area/page
             - /qry/area/allList
+            - /qry/area/view/{code}
 
 management:
     server:

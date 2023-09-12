@@ -9,7 +9,9 @@ import java.time.LocalDate;
 <%if(importTime==true){%>
 import java.time.LocalDateTime;
 <%}%>
+<%if(importBigInteger==true || importDateAt==true || importTimeAt==true){%>
 
+<%}%>
 import org.beetl.sql.annotation.entity.AssignID;
 import org.beetl.sql.annotation.entity.Table;
 

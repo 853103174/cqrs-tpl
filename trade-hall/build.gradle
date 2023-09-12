@@ -2,6 +2,20 @@ dependencies {
     implementation project(':common')
 }
 
+    // jar {
+    //     manifest{
+    //         attributes 'Main-Class': 'com.sdnc.trade.TradeHallApplication'
+    //     }
+    // }
+    // application {
+    //     mainClassName='com.sdnc.trade.TradeHallApplication'
+    // }
+
+    // bootJar {
+    //     enabled = false
+    // }
+
 // bootRun {
-//     jvmArgs "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
+//     mainClass "com.sdnc.trade.TradeHallApplication"
+//     //jvmArgs "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
 // }

@@ -1,15 +1,14 @@
 package com.sdnc.common.config;
 
-import java.io.IOException;
-
-import org.springframework.stereotype.Component;
-
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 
 /**
  * 过滤请求
@@ -20,7 +19,6 @@ public final class PrintExceptionFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-
         HttpServletRequest req = (HttpServletRequest) request;
         if ("POST".equals(req.getMethod())) {
             chain.doFilter(new PrintExceptionRequestWrapper(req), response);

@@ -1,3 +1,16 @@
 dependencies {
     implementation project(':common')
 }
+
+    // application {
+    //     mainClassName='com.sdnc.trade.TradeHallApplication'
+    // }
+
+
+    // bootJar {
+    //     enabled = false
+    // }
+// bootRun {
+//     mainClass "com.sdnc.trade.TradeHallApplication"
+//     //jvmArgs "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
+// }

@@ -9,7 +9,9 @@ import java.time.LocalDate;
 <%if(importTimeAt==true){%>
 import java.time.LocalDateTime;
 <%}%>
+<%if(importBigInteger==true || importDateAt==true || importTimeAt==true){%>
 
+<%}%>
 import ${importPO}.${className}PO;
 
 import io.github.linpeilie.annotations.AutoMapper;

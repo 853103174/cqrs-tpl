@@ -1,19 +1,17 @@
 package com.sdnc.common.config;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-
+import com.sdnc.common.constant.HeaderConstant;
+import com.sdnc.common.redis.RedisCache;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.sdnc.common.constant.HeaderConstant;
-import com.sdnc.common.redis.RedisCache;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -27,8 +25,7 @@ public final class IdempotentInterceptor implements HandlerInterceptor {
 	private final RedisCache<Boolean> cache;
 
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-			throws Exception {
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 		String token = request.getHeader(HeaderConstant.ACCESS_TOKEN);
 		StringBuilder keys = new StringBuilder(50);
 		keys.append(token).append(request.getRequestURI());
@@ -43,12 +40,11 @@ public final class IdempotentInterceptor implements HandlerInterceptor {
 
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-			ModelAndView modelAndView) throws Exception {
+			ModelAndView modelAndView) {
 	}
 
 	@Override
-	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
-			throws Exception {
+	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
 		String token = request.getHeader(HeaderConstant.ACCESS_TOKEN);
 		StringBuilder keys = new StringBuilder(50);
 		keys.append(token).append(request.getRequestURI());

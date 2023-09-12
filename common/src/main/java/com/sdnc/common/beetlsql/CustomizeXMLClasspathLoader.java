@@ -17,13 +17,18 @@ public class CustomizeXMLClasspathLoader extends XMLClasspathLoader {
 	}
 
 	public CustomizeXMLClasspathLoader() {
-		this("sql");
+		this("");
 	}
 
 	@Override
 	protected URL getFilePath(String root, SqlId id) {
 		String path = this.getPathBySqlId(id);
-		String filePath = root + "/" + path + "/" + path + ".xml";
+		String filePath = root + "/";
+		if (path.indexOf(".")==-1) {
+			filePath += path + "/" + path + ".xml";
+		} else {
+			filePath += path.replace(".", "/") + ".xml";
+		}
 
 		return this.getFile(filePath);
 	}

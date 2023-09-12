@@ -1,9 +1,5 @@
 package com.sdnc.trade.domain.valueobject.area;
 
-
-import com.sdnc.trade.domain.persistantobject.area.AreaPO;
-
-import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -17,7 +13,6 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-@AutoMapper(target = AreaPO.class)
 public final class AreaPageVO {
 
     /**

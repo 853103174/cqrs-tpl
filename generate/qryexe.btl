@@ -31,9 +31,14 @@ public class ${className}QryExe {
         return service.page(bo);
     }
 
-    @GetMapping("/view/{id}")
-    public ${className}ViewVO view(@PathVariable Long id) {
-        return service.view(id);
+<%for(cm in columns){%>
+    <%if(cm.pk==true){%>
+    @GetMapping("/view/{${cm.colName}}")
+    public ${className}ViewVO view(@PathVariable ${cm.javaType} ${cm.colName}) {
+        return service.view(${cm.colName});
     }
+    <%break;%>
+    <%}%>
+<%}%>
 
 }

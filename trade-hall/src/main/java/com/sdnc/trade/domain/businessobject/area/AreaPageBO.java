@@ -1,6 +1,5 @@
 package com.sdnc.trade.domain.businessobject.area;
 
-
 import com.sdnc.common.query.PageQO;
 
 import lombok.Getter;

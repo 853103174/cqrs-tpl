@@ -1,8 +1,12 @@
 package com.sdnc.common.config;
 
-import java.io.InputStreamReader;
-import java.util.Map;
-
+import com.sdnc.common.exception.SystemException;
+import com.sdnc.common.exception.TokenException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.ValidationException;
+import log.tiny.TinyLog;
+import log.util.CommUtil;
 import org.noear.snack.ONode;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -12,14 +16,8 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.sdnc.common.exception.SystemException;
-import com.sdnc.common.exception.TokenException;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.ValidationException;
-import log.tiny.TinyLog;
-import log.util.CommUtil;
+import java.io.InputStreamReader;
+import java.util.Map;
 
 /**
  *
@@ -38,7 +36,7 @@ public final class PrintExceptionResolver implements HandlerExceptionResolver {
 			Exception ex) {
 		Map<String, String[]> parasMap = req.getParameterMap();
 		if (parasMap.isEmpty()) {
-			try (InputStreamReader isr = new InputStreamReader(req.getInputStream(), "UTF-8");) {
+			try (InputStreamReader isr = new InputStreamReader(req.getInputStream(), "UTF-8")) {
 				StringBuilder result = new StringBuilder(4000);
 				result.append(endStr);
 				result.append(endStr);
@@ -66,7 +64,7 @@ public final class PrintExceptionResolver implements HandlerExceptionResolver {
 				} else if (ex instanceof ValidationException ve) {
 					result.append(ve.getMessage());
 					log.warn(result);
-				} else if (ex instanceof TokenException te) {
+				} else if (ex instanceof TokenException) {
 					result.append("未获取到RefreshToken");
 					log.warn(result);
 				} else if (ex instanceof SystemException se) {
@@ -104,7 +102,7 @@ public final class PrintExceptionResolver implements HandlerExceptionResolver {
 				} else if (ex instanceof ValidationException ve) {
 					result.append(ve.getMessage());
 					log.warn(result);
-				} else if (ex instanceof TokenException te) {
+				} else if (ex instanceof TokenException) {
 					result.append("未获取到RefreshToken");
 					log.warn(result);
 				} else if (ex instanceof SystemException se) {

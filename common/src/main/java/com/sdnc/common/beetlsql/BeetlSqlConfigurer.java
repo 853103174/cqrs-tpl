@@ -1,29 +1,25 @@
 package com.sdnc.common.beetlsql;
 
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
-
-import javax.sql.DataSource;
-
+import cn.beecp.BeeDataSource;
+import com.sdnc.common.auth.AccessContext;
+import com.sdnc.common.redis.RedisCache;
+import jakarta.annotation.Resource;
 import org.beetl.sql.core.IDAutoGen;
 import org.beetl.sql.core.Interceptor;
 import org.beetl.sql.core.SQLManager;
 import org.beetl.sql.core.SQLReady;
-import org.beetl.sql.core.engine.StringSqlTemplateLoader;
-import org.beetl.sql.core.engine.template.BeetlTemplateEngine;
+import org.beetl.sql.core.loader.MarkdownClasspathLoader;
+import org.beetl.sql.firewall.FireWall;
+import org.beetl.sql.firewall.FireWallConfig;
 import org.beetl.sql.starter.SQLManagerCustomize;
-import org.beetl.sql.xml.XMLBeetlSQL;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.sdnc.common.auth.AccessContext;
-import com.sdnc.common.redis.RedisCache;
-
-import cn.beecp.BeeDataSource;
-import jakarta.annotation.Resource;
+import javax.sql.DataSource;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -38,10 +34,6 @@ public class BeetlSqlConfigurer {
 	// @Lazy
 	// @Resource
 	// private SQLManager primarySQLManager;
-	@Value("${spring.profiles.active}")
-	private String activeProfile;
-	@Value("${beetlsql.primarySQLManager.basePackage}")
-	private String basePackage;
 
 	@Bean
 	// @Primary
@@ -53,12 +45,6 @@ public class BeetlSqlConfigurer {
 	@Bean
 	public SQLManagerCustomize sqlManagerCustomize() {
 		SQLManager.javabeanStrict(false);
-		// 防火墙功能
-		// FireWall fireWall = new FireWall();
-		// fireWall.setDmlCreateEnable(false);
-		// fireWall.setSqlMaxLength(500);
-		// FireWallConfig fireWallConfig = new FireWallConfig(fireWall);
-		// fireWallConfig.config(primarySQLManager);
 
 		return (sqlManagerName, manager) -> {
 			Interceptor[] inters = manager.getInters();
@@ -69,16 +55,31 @@ public class BeetlSqlConfigurer {
 			}
 			manager.setInters(newInterceptors);
 			// 配置xml插件
-			CustomizeXMLClasspathLoader classpathLoader = new CustomizeXMLClasspathLoader(
-					basePackage.replace(".", "/"));
-			classpathLoader.setClassLoaderKit(manager.getClassLoaderKit());
-			classpathLoader.setDbStyle(manager.getDbStyle());
-			manager.setSqlLoader(classpathLoader);
-			BeetlTemplateEngine beetlTemplateEngine = (BeetlTemplateEngine) manager.getSqlTemplateEngine();
-			StringSqlTemplateLoader sqlTemplateLoader = new StringSqlTemplateLoader(classpathLoader);
-			beetlTemplateEngine.getBeetl().getGroupTemplate().setResourceLoader(sqlTemplateLoader);
-			XMLBeetlSQL xmlBeetlSQL = new XMLBeetlSQL();
-			xmlBeetlSQL.config(manager);
+			MarkdownClasspathLoader sqlLoader = (MarkdownClasspathLoader) manager.getSqlLoader();
+			CustomizeXMLBeetlSQL xmlBeetlSQL = new CustomizeXMLBeetlSQL();
+			xmlBeetlSQL.config(sqlLoader.getSqlRoot(), manager);
+			// 防火墙功能
+			FireWall fireWall = new FireWall();
+			fireWall.setDmlCreateEnable(false);
+			fireWall.setSqlMaxLength(1000);
+			FireWallConfig fireWallConfig = new FireWallConfig(fireWall);
+			fireWallConfig.config(manager);
+			// 支持多租户，数据权限，逻辑删除等 需要重写 sql，增加额外过滤条件的场景
+			// 只有集成了 RewriteBaseMapper 的 Mapper 发出的操作才能触发 sql 改写
+			//TenantConfig tenantConfig = new TenantConfig();
+			//tenantConfig.config(manager);
+			//tenantConfig.addColRewriteConfig(new ColRewriteParam("tenant_id", new ColValueProvider() {
+			//	@Override
+			//	public Object getCurrentValue() {
+			//		return 1;
+			//	}
+			//}));
+			//tenantConfig.addColRewriteConfig(new ColRewriteParam("dept_id", new ColValueProvider() {
+			//	@Override
+			//	public Object getCurrentValue() {
+			//		return Arrays.asList(1,2,3);
+			//	}
+			//}));
 
 			// 将BigDecimal映射为BigInteger
 			// BigIntTypeHandler bigIntTypeHandler = new BigIntTypeHandler();

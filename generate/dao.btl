@@ -1,5 +1,7 @@
 package ${packageName};
 
+import java.util.List;
+
 import org.beetl.sql.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +15,18 @@ import ${importPO}.${className}PO;
  */
 @Repository
 public interface ${className}Dao extends BaseMapper<${className}PO> {
+
+<%for(cm in columns){%>
+    <%if(cm.pk==true){%>
+	default <K> K single(${cm.javaType} ${cm.colName}, Class<K> retType){
+		List<K> list = this.createLambdaQuery()
+				.andEq(${className}PO::get${cm.colNameToUpper}, ${cm.colName})
+				.select(retType);
+
+		return list.get(0);
+	}
+    <%break;%>
+    <%}%>
+<%}%>
 
 }

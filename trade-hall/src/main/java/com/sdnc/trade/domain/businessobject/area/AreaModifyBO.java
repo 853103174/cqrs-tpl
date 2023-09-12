@@ -1,6 +1,5 @@
 package com.sdnc.trade.domain.businessobject.area;
 
-
 import com.sdnc.trade.domain.persistantobject.area.AreaPO;
 
 import io.github.linpeilie.annotations.AutoMapper;

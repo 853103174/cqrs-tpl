@@ -1,7 +1,6 @@
 package com.sdnc.trade.application.service.area;
 
 import java.util.List;
-import java.util.function.Function;
 
 import org.beetl.sql.core.page.PageResult;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,6 @@ import com.sdnc.trade.domain.valueobject.area.AreaPageVO;
 import com.sdnc.trade.domain.valueobject.area.AreaViewVO;
 import com.sdnc.trade.infrastructure.dao.area.AreaDao;
 
-import io.github.linpeilie.Converter;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -27,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 public class AreaQrySvc {
 
     private final AreaDao dao;
-    private final Converter converter;
 
     /**
      * 分页
@@ -36,32 +33,32 @@ public class AreaQrySvc {
      * @return
      */
     public PageResult<AreaPageVO> page(AreaPageBO bo) {
-        PageResult<AreaPO> result = dao.createLambdaQuery()
-                .andLike(AreaPO::getName, QueryKit.like(bo.getName()))
-                .page(bo.getPageNum(), bo.getPageSize());
-        Function<AreaPO, AreaPageVO> function = po -> converter.convert(po, AreaPageVO.class);
+        PageResult<AreaPageVO> result = dao.createLambdaQuery()
+                .andEq(AreaPO::getCode, QueryKit.notNull(bo.getCode()))
+                .page(bo.getPageNum(), bo.getPageSize(), AreaPageVO.class);
 
-        return result.convert(function);
+        return result;
     }
 
     /**
      * 获取父编码下的子区域
      *
      * @param parentCode
+     * @param name
      * @return
      */
-    public List<AreaPageVO> allList(Integer parentCode) {
-        return dao.allList(parentCode);
+    public List<AreaPageVO> allList(Integer parentCode, String name) {
+        return dao.allList(parentCode, name);
     }
 
     /**
      * 查询单个
      *
-     * @param id
+     * @param code 编码
      * @return
      */
-    public AreaViewVO view(Integer id) {
-        return converter.convert(dao.single(id), AreaViewVO.class);
+    public AreaViewVO view(Integer code) {
+        return dao.single(code, AreaViewVO.class);
     }
 
 }

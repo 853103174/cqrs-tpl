@@ -4,7 +4,7 @@ import org.beetl.sql.core.Interceptor;
 import org.beetl.sql.core.InterceptorContext;
 
 /**
- * 定制SQL可实现多租户数据隔离等需求
+ * 定制SQL可实现多租户,数据权限,逻辑删除等需求
  */
 public final class CustomizeSQLInterceptor implements Interceptor {
 

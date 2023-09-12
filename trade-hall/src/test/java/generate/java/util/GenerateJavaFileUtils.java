@@ -1,5 +1,14 @@
 package generate.java.util;
 
+import com.sdnc.common.kits.KV;
+import org.beetl.core.Configuration;
+import org.beetl.core.GroupTemplate;
+import org.beetl.core.Template;
+import org.beetl.core.exception.BeetlException;
+import org.beetl.core.resource.FileResourceLoader;
+import org.noear.snack.ONode;
+import org.yaml.snakeyaml.Yaml;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,16 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
-import org.beetl.core.Configuration;
-import org.beetl.core.GroupTemplate;
-import org.beetl.core.Template;
-import org.beetl.core.exception.BeetlException;
-import org.beetl.core.resource.FileResourceLoader;
-import org.noear.snack.ONode;
-import org.yaml.snakeyaml.Yaml;
-
-import com.sdnc.common.kits.KV;
 
 /**
  * 数据库表转换成javaBean对象小工具
@@ -52,6 +51,7 @@ public class GenerateJavaFileUtils {
 	private static String tableremarks = ""; // 表备注
 	private static String pk = ""; // 主键
 	private static String baseTemplatePath; // 模板引擎文件夹路径
+	private static List<KV> columns = new ArrayList<>(); // 列名集合
 
 	public static void main(String[] args) {
 		tablename = "area";
@@ -134,9 +134,6 @@ public class GenerateJavaFileUtils {
 
 	/**
 	 * 获取主键和备注
-	 *
-	 * @param table
-	 *              表名
 	 */
 	private static void getTableInfo() {
 		Connection conn = null;
@@ -335,7 +332,6 @@ public class GenerateJavaFileUtils {
 			KV paras = KV.by("packageName", poPackage).set("tableRemark", tableremarks).set("tableName", tablename)
 					.set("className", className).set("importBigInteger", false).set("importDate", false)
 					.set("importDateAt", false).set("importTime", false).set("importTimeAt", false);
-			List<KV> columns = new ArrayList<>();
 			for (int i = 0; i < rsmd.getColumnCount(); i++) {
 				KV column = new KV();
 				colName = processColnames(rsmd.getColumnName(i + 1));
@@ -460,7 +456,7 @@ public class GenerateJavaFileUtils {
 			String poPackage = command_po_name.substring(command_po_name.indexOf("com/"), command_po_name.length() - 1)
 					.replaceAll("/", ".");
 			KV paras = KV.by("packageName", packageName).set("tableRemark", tableremarks).set("className", className)
-					.set("importPO", poPackage);
+					.set("importPO", poPackage).set("columns", columns);
 			FileResourceLoader resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
 			Configuration cfg = Configuration.defaultConfiguration();
 			GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
@@ -497,7 +493,7 @@ public class GenerateJavaFileUtils {
 					.replaceAll("/", ".");
 			KV paras = KV.by("packageName", packageName).set("tableRemark", tableremarks).set("className", className)
 					.set("importPO", poPackage).set("importDao", daoPackage).set("importDO", doPackage)
-					.set("importBO", boPackage);
+					.set("importBO", boPackage).set("columns", columns);
 			// CmdSvc
 			FileResourceLoader resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
 			Configuration cfg = Configuration.defaultConfiguration();
@@ -542,7 +538,7 @@ public class GenerateJavaFileUtils {
 			KV paras = KV.by("packageName", packageName).set("tableRemark", tableremarks)
 					.set("path", tablename.substring(tablename.indexOf("_") + 1).replaceAll("_", "-"))
 					.set("className", className).set("importSvc", servicePackage).set("importDO", doPackage)
-					.set("importBO", boPackage);
+					.set("importBO", boPackage).set("columns", columns);
 			// CmdExe
 			StringBuffer sb = new StringBuffer();
 			sb.append(command_controller_name);

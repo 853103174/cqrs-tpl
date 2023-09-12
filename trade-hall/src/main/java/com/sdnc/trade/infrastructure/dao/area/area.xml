@@ -4,7 +4,7 @@
     <sql id="allList">
         select * from area
         <where>
-            parent_code=#{parentCode}
+            parent_code=#{parentCode} and name like #{name}
         </where>
     </sql>
 

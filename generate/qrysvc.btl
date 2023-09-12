@@ -1,7 +1,5 @@
 package ${packageName};
 
-import java.util.function.Function;
-
 import org.beetl.sql.core.page.PageResult;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +10,6 @@ import ${importPO}.${className}PO;
 import ${importDao}.${className}Dao;
 import ${importDO}.${className}PageBO;
 
-import io.github.linpeilie.Converter;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -26,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 public class ${className}QrySvc {
 
     private final ${className}Dao dao;
-    private final Converter converter;
 
     /**
      * 分页
@@ -34,23 +30,32 @@ public class ${className}QrySvc {
      * @param bo
      * @return
      */
+<%for(cm in columns){%>
+    <%if(cm.pk==true){%>
     public PageResult<${className}PageVO> page(${className}PageBO bo) {
-        PageResult<${className}PO> result = dao.createLambdaQuery()
-                //.andEq(${className}PO::getId, QueryKit.notNull(bo.getId()))
-                .page(bo.getPageNum(), bo.getPageSize());
-        Function<${className}PO, ${className}PageVO> function = po -> converter.convert(po, ${className}PageVO.class);
+        PageResult<${className}PageVO> result = dao.createLambdaQuery()
+                .andEq(${className}PO::get${cm.colNameToUpper}, QueryKit.notNull(bo.get${cm.colNameToUpper}()))
+                .page(bo.getPageNum(), bo.getPageSize(), ${className}PageVO.class);
 
-        return result.convert(function);
+        return result;
     }
+    <%break;%>
+    <%}%>
+<%}%>
 
+<%for(cm in columns){%>
+    <%if(cm.pk==true){%>
     /**
      * 查询单个
      *
-     * @param id
+     * @param ${cm.colName} ${cm.remark}
      * @return
      */
-    public ${className}ViewVO view(Long id) {
-        return converter.convert(dao.single(id), ${className}ViewVO.class);
+    public ${className}ViewVO view(${cm.javaType} ${cm.colName}) {
+        return dao.single(${cm.colName}, ${className}ViewVO.class);
     }
+    <%break;%>
+    <%}%>
+<%}%>
 
 }
