@@ -11,5 +11,8 @@
     <bower-package value="" />
     <bower.json value="" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
 </project>

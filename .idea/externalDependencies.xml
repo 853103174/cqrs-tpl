@@ -2,9 +2,16 @@
 <project version="4">
   <component name="ExternalDependencies">
     <plugin id="GrepConsole" />
+    <plugin id="String Manipulation" />
     <plugin id="ai.codegeex.plugin" />
+    <plugin id="cn.yiiguxing.plugin.translate" />
+    <plugin id="com.baomidou.plugin.idea.mybatisx" />
     <plugin id="com.dubreuia" />
     <plugin id="com.intellij.zh" />
+    <plugin id="com.mybatisflex.bigtian" />
+    <plugin id="com.starxg.mybatis-log-plugin-free" />
+    <plugin id="gudqs7.github.io.getter-setter-postfix" />
+    <plugin id="intellij-theme-relax-your-eyes-green" />
     <plugin id="io.zhile.research.ide-eval-resetter" />
     <plugin id="izhangzhihao.rainbow.brackets" />
   </component>
