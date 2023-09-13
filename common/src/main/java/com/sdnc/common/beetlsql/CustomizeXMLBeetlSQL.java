@@ -7,7 +7,9 @@ import org.beetl.sql.xml.XMLClasspathLoader;
 import lombok.NoArgsConstructor;
 
 /**
+ *
  * BeetlSQL支持XML语法
+ *
  */
 @NoArgsConstructor
 public final class CustomizeXMLBeetlSQL extends XMLBeetlSQL {

@@ -31,9 +31,9 @@ public class AreaQryExe {
         return service.page(bo);
     }
 
-	@GetMapping("/allList")
-	public List<AreaPageVO> allList(Integer parentCode, String name) {
-		return service.allList(parentCode, name);
+	@GetMapping("/list")
+	public List<AreaPageVO> list(Integer parentCode, String name) {
+		return service.list(parentCode, name);
 	}
 
     @GetMapping("/view/{code}")

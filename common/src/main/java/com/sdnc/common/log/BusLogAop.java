@@ -1,23 +1,20 @@
 package com.sdnc.common.log;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+import com.sdnc.common.exception.SystemException;
+import com.sdnc.common.exception.TokenException;
+import log.tiny.TinyLog;
+import log.util.CommUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.noear.snack.ONode;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
-import com.sdnc.common.exception.SystemException;
-import com.sdnc.common.exception.TokenException;
-
-import log.tiny.TinyLog;
-import log.util.CommUtil;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  *
@@ -26,17 +23,10 @@ import log.util.CommUtil;
  */
 @Aspect
 @Component
-@Profile("dev")
+@Profile({"test", "prod"})
 public final class BusLogAop implements Ordered {
 
     private final TinyLog log = TinyLog.getInstance();
-
-    /**
-     * 定义BusLogAop的切入点为标记@BusLog注解的方法
-     */
-    @Pointcut("execution(* com.sdnc..interfaces.controller..*(..)) || execution(* com.sdnc..application.service..*(..))")
-    public void pointcut() {
-    }
 
     /**
      * 业务操作环绕通知
@@ -44,7 +34,7 @@ public final class BusLogAop implements Ordered {
      * @param proceedingJoinPoint
      * @retur
      */
-    @Around("pointcut()")
+	@Around("within(@org.springframework.web.bind.annotation.RestController *) || within(@org.springframework.stereotype.Service *)")
     public Object around(ProceedingJoinPoint proceedingJoinPoint) {
         // 执行目标方法
         Object result = null;

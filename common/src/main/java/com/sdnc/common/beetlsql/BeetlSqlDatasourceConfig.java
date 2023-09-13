@@ -1,12 +1,15 @@
 package com.sdnc.common.beetlsql;
 
+import com.sdnc.common.annotation.Use;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.beetl.sql.core.ThreadLocalSQLManager;
 
 /**
- * 为service提供一个切面, 根据配置动态切换数据源
+ *
+ * 为Service提供一个切面, 根据配置动态切换数据源
+ *
  */
 //@Aspect
 //@Configuration
@@ -26,8 +29,7 @@ public class BeetlSqlDatasourceConfig {
 		}
 
 		try {
-			Object o = pjp.proceed();
-			return o;
+			return pjp.proceed();
 		} finally {
 			ThreadLocalSQLManager.locals.set(old);
 		}

@@ -1,18 +1,16 @@
 package com.sdnc.trade.application.service.area;
 
-import java.util.List;
-
-import org.beetl.sql.core.page.PageResult;
-import org.springframework.stereotype.Service;
-
 import com.sdnc.common.kits.QueryKit;
 import com.sdnc.trade.domain.businessobject.area.AreaPageBO;
 import com.sdnc.trade.domain.persistantobject.area.AreaPO;
 import com.sdnc.trade.domain.valueobject.area.AreaPageVO;
 import com.sdnc.trade.domain.valueobject.area.AreaViewVO;
 import com.sdnc.trade.infrastructure.dao.area.AreaDao;
-
 import lombok.RequiredArgsConstructor;
+import org.beetl.sql.core.page.PageResult;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  *
@@ -47,8 +45,8 @@ public class AreaQrySvc {
      * @param name
      * @return
      */
-    public List<AreaPageVO> allList(Integer parentCode, String name) {
-        return dao.allList(parentCode, name);
+    public List<AreaPageVO> list(Integer parentCode, String name) {
+        return dao.list(parentCode, name);
     }
 
     /**
@@ -58,7 +56,7 @@ public class AreaQrySvc {
      * @return
      */
     public AreaViewVO view(Integer code) {
-        return dao.single(code, AreaViewVO.class);
+        return dao.view(code);
     }
 
 }

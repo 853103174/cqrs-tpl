@@ -50,13 +50,7 @@ public final class IdempotentInterceptor implements HandlerInterceptor {
 		keys.append(token).append(request.getRequestURI());
 		if (cache.hasKey(keys.toString())) {
 			// 3秒后异步方式删除Key
-			CompletableFuture.runAsync(() -> {
-				try {
-					Thread.sleep(3000);
-					cache.unlink(keys.toString());
-				} catch (InterruptedException e) {
-				}
-			});
+			cache.asyncDel(keys.toString());
 		}
 	}
 

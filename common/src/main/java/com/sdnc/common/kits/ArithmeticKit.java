@@ -1,14 +1,15 @@
 package com.sdnc.common.kits;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 /**
+ *
  * 小数运算工具类
+ *
  */
 public final class ArithmeticKit {
 
-    // 默认除法运算精度
+    // 默认运算精度
     private static final int DEF_DIV_SCALE = 2;
 
     /**
@@ -51,7 +52,7 @@ public final class ArithmeticKit {
         BigDecimal b1 = new BigDecimal(v1);
         BigDecimal b2 = new BigDecimal(v2);
 
-        return b1.add(b2).setScale(scale, RoundingMode.HALF_UP).toString();
+        return b1.add(b2).setScale(scale, BigDecimal.ROUND_HALF_UP).toString();
     }
 
     /**
@@ -94,7 +95,7 @@ public final class ArithmeticKit {
         BigDecimal b1 = new BigDecimal(v1);
         BigDecimal b2 = new BigDecimal(v2);
 
-        return b1.subtract(b2).setScale(scale, RoundingMode.HALF_UP).toString();
+        return b1.subtract(b2).setScale(scale, BigDecimal.ROUND_HALF_UP).toString();
     }
 
     /**
@@ -152,7 +153,7 @@ public final class ArithmeticKit {
         BigDecimal b1 = new BigDecimal(v1);
         BigDecimal b2 = new BigDecimal(v2);
 
-        return b1.multiply(b2).setScale(scale, RoundingMode.HALF_UP).toString();
+        return b1.multiply(b2).setScale(scale, BigDecimal.ROUND_HALF_UP).toString();
     }
 
     /**
@@ -181,7 +182,7 @@ public final class ArithmeticKit {
         BigDecimal b1 = new BigDecimal(Double.toString(v1));
         BigDecimal b2 = new BigDecimal(Double.toString(v2));
 
-        return b1.divide(b2, scale, RoundingMode.HALF_UP).doubleValue();
+        return b1.divide(b2, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
     /**
@@ -197,7 +198,7 @@ public final class ArithmeticKit {
         BigDecimal b1 = new BigDecimal(v1);
         BigDecimal b2 = new BigDecimal(v1);
 
-        return b1.divide(b2, scale, RoundingMode.HALF_UP).toString();
+        return b1.divide(b2, scale, BigDecimal.ROUND_HALF_UP).toString();
     }
 
     /**
@@ -210,7 +211,7 @@ public final class ArithmeticKit {
     public static double round(double v, int scale) {
         BigDecimal b = new BigDecimal(Double.toString(v));
 
-        return b.setScale(scale, RoundingMode.HALF_UP).doubleValue();
+        return b.setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
     /**
@@ -223,7 +224,7 @@ public final class ArithmeticKit {
     public static String round(String v, int scale) {
         BigDecimal b = new BigDecimal(v);
 
-        return b.setScale(scale, RoundingMode.HALF_UP).toString();
+        return b.setScale(scale, BigDecimal.ROUND_HALF_UP).toString();
     }
 
     /**
@@ -238,7 +239,7 @@ public final class ArithmeticKit {
         BigDecimal b1 = new BigDecimal(v1);
         BigDecimal b2 = new BigDecimal(v2);
 
-        return b1.remainder(b2).setScale(scale, RoundingMode.HALF_UP).toString();
+        return b1.remainder(b2).setScale(scale, BigDecimal.ROUND_HALF_UP).toString();
     }
 
     /**
@@ -250,7 +251,7 @@ public final class ArithmeticKit {
      * @return 余数
      */
     public static BigDecimal remainder(BigDecimal v1, BigDecimal v2, int scale) {
-        return v1.remainder(v2).setScale(scale, RoundingMode.HALF_UP);
+        return v1.remainder(v2).setScale(scale, BigDecimal.ROUND_HALF_UP);
     }
 
     /**

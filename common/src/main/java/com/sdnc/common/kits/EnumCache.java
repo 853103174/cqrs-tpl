@@ -4,7 +4,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ *
  * 枚举缓存
+ *
  */
 public final class EnumCache {
 

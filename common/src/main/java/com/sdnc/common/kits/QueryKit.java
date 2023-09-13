@@ -1,9 +1,14 @@
 package com.sdnc.common.kits;
 
-import java.util.List;
-
 import org.beetl.sql.core.query.interfacer.StrongValue;
 
+import java.util.List;
+
+/**
+ *
+ * 查询条件校验工具类
+ *
+ */
 public final class QueryKit {
 
     /**

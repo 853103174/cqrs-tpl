@@ -11,7 +11,9 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 /**
- * 过滤请求
+ *
+ * 配置请求输出错误信息
+ *
  */
 @Component
 public final class PrintExceptionFilter implements Filter {

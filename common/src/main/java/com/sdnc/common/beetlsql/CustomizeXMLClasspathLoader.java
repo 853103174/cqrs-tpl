@@ -1,23 +1,21 @@
 package com.sdnc.common.beetlsql;
 
+import lombok.NoArgsConstructor;
 import org.beetl.sql.core.SqlId;
 import org.beetl.sql.xml.XMLClasspathLoader;
 
 import java.net.URL;
 
+/**
+ *
+ * BeetlSQL支持XML语法
+ *
+ */
+@NoArgsConstructor
 public class CustomizeXMLClasspathLoader extends XMLClasspathLoader {
-
-	public CustomizeXMLClasspathLoader(String root, String charset) {
-		super(root, charset);
-
-	}
 
 	public CustomizeXMLClasspathLoader(String root) {
 		super(root);
-	}
-
-	public CustomizeXMLClasspathLoader() {
-		this("");
 	}
 
 	@Override

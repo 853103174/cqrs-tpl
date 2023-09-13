@@ -1,16 +1,16 @@
 package com.sdnc.common.redis;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import lombok.RequiredArgsConstructor;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -244,6 +244,22 @@ public final class RedisCache<T> {
 	 */
 	public boolean delete(String key) {
 		return redis.delete(key);
+	}
+
+	/**
+	 * 3秒后异步删除单个对象
+	 *
+	 * @param key
+	 *            缓存的键值
+	 */
+	public void asyncDel(String key) {
+		CompletableFuture.runAsync(() -> {
+			try {
+				Thread.sleep(3000);
+				redis.delete(key);
+			} catch (InterruptedException e) {
+			}
+		});
 	}
 
 	/**

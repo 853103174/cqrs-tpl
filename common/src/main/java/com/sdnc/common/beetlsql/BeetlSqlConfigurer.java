@@ -16,6 +16,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 import javax.sql.DataSource;
 import java.util.Date;
@@ -31,9 +32,9 @@ public class BeetlSqlConfigurer {
 
 	@Resource
 	private RedisCache<Integer> cache;
-	// @Lazy
-	// @Resource
-	// private SQLManager primarySQLManager;
+	 @Lazy
+	 @Resource
+	 private SQLManager primarySQLManager;
 
 	@Bean
 	// @Primary
@@ -92,7 +93,7 @@ public class BeetlSqlConfigurer {
 				@Override
 				public Long nextID(String params) {
 					String sql = "select nextval('all_id_seq')";
-					return manager.executeQueryOne(new SQLReady(sql), Long.class);
+					return primarySQLManager.executeQueryOne(new SQLReady(sql), Long.class);
 				}
 
 			});

@@ -8,7 +8,7 @@ package com.sdnc.common.exception;
 public final class TokenException extends RuntimeException {
 
     public TokenException() {
-        super("令牌刷新值过期");
+        super("令牌刷新值已过期");
     }
 
 }

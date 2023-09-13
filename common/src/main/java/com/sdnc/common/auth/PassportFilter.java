@@ -1,17 +1,7 @@
 package com.sdnc.common.auth;
 
-import java.io.IOException;
-import java.util.Objects;
-
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
-
 import com.sdnc.common.constant.HeaderConstant;
 import com.sdnc.common.kits.HttpWriterKit;
-
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,6 +9,14 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
+
+import java.io.IOException;
+import java.util.Objects;
 
 /**
  *
@@ -48,7 +46,7 @@ public final class PassportFilter implements Filter {
 			chain.doFilter(request, response);
 		} else {
 			final AccessUser accessUser = tokenContext.getAccessUser(accessToken);
-			if (Objects.isNull(accessUser)) {
+			if (Objects.isNull(accessUser.getId())) {
 				HttpStatus status = HttpStatus.NETWORK_AUTHENTICATION_REQUIRED;
 				HttpWriterKit.text(response, "请重新登录", status);
 				return;

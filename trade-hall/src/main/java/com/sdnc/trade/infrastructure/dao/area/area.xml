@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <beetlsql>
 
-    <sql id="allList">
+    <sql id="list">
         select * from area
         <where>
-            parent_code=#{parentCode} and name like #{name}
+            parent_code=#{parentCode} and name like concat('%',#{name},'%')
         </where>
     </sql>
 
