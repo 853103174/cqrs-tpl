@@ -6,6 +6,10 @@ import org.beetl.sql.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
 
 import ${importPO}.${className}PO;
+import ${importBO}.${className}ViewVO;
+<%if(importBigInteger==true){%>
+import java.math.BigInteger;
+<%}%>
 
 /**
  *
@@ -18,10 +22,10 @@ public interface ${className}Dao extends BaseMapper<${className}PO> {
 
 <%for(cm in columns){%>
     <%if(cm.pk==true){%>
-	default <K> K single(${cm.javaType} ${cm.colName}, Class<K> retType){
-		List<K> list = this.createLambdaQuery()
+	default ${className}ViewVO view(${cm.javaType} ${cm.colName}){
+		List<${className}ViewVO> list = this.createLambdaQuery()
 				.andEq(${className}PO::get${cm.colNameToUpper}, ${cm.colName})
-				.select(retType);
+				.select(${className}ViewVO.class);
 
 		return list.get(0);
 	}

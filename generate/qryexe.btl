@@ -12,6 +12,9 @@ import ${importBO}.${className}ViewVO;
 import ${importDO}.${className}PageBO;
 
 import lombok.RequiredArgsConstructor;
+<%if(importBigInteger==true){%>
+import java.math.BigInteger;
+<%}%>
 
 /**
  *

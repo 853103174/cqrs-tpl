@@ -7,10 +7,10 @@
 #### 软件架构
 
 1. Java-v17
-2. Gradle-v7.5.1
-3. SpringBoot-v3.1.2
-4. BeetlSQL-v3.24.0
-5. Jedis-v4.3.2
+2. Gradle-v8
+3. SpringBoot-v3
+4. BeetlSQL-v3
+5. Jedis-v4
 
 #### 软件分包
 

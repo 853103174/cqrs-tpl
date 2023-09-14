@@ -12,9 +12,16 @@ import java.time.LocalDateTime;
 <%if(importBigInteger==true || importDateAt==true || importTimeAt==true){%>
 
 <%}%>
+<%if(importUpdateTime==true){%>
+import org.beetl.sql.annotation.builder.FillStrategy;
+import org.beetl.sql.annotation.builder.UpdateTime;
+<%}%>
 import org.beetl.sql.annotation.entity.AssignID;
 import org.beetl.sql.annotation.entity.Table;
 
+<%if(importUpdateUser==true){%>
+import com.sdnc.common.annotation.UpdateUser;
+<%}%>
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -37,6 +44,18 @@ public final class ${className}PO {
      */
     <%if(cm.pk==true){%>
     @AssignID("autoId")
+    <%}%>
+    <%if(cm.colName=="createAt"){%>
+    @UpdateTime(FillStrategy.INSERT)
+    <%}%>
+    <%if(cm.colName=="updateAt"){%>
+    @UpdateTime(FillStrategy.INSERT_UPDATE)
+    <%}%>
+    <%if(cm.colName=="createBy"){%>
+    @UpdateUser(FillStrategy.INSERT)
+    <%}%>
+    <%if(cm.colName=="updateBy"){%>
+    @UpdateUser(FillStrategy.INSERT_UPDATE)
     <%}%>
     private ${cm.javaType} ${cm.colName};
 <%}%>

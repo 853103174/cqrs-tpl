@@ -25,11 +25,11 @@ allprojects {
         maven { url 'https://jitpack.io' }
     }
 
-    java {
-        toolchain {
-            languageVersion = JavaLanguageVersion.of(17)
-        }
-    }
+//    java {
+//        toolchain {
+//            languageVersion = JavaLanguageVersion.of(17)
+//        }
+//    }
 
     // buildscript {
     //     repositories {
@@ -86,9 +86,11 @@ subprojects {
 
     compileJava {
         options.fork = true
-        options.incremental = true
+        options.incremental = false
         options.failOnError = false
         options.deprecation = true
+        options.encoding = 'UTF-8'
+        options.release = 17
         options.compilerArgs += ['-parameters', '-Xdoclint:none', '-Xlint:none', '-nowarn']
     }
 
@@ -107,6 +109,10 @@ subprojects {
         all*.exclude module: 'HikariCP'
         all*.exclude module: 'sql-gen'
         all*.exclude module: 'json'
+        all*.exclude module: 'jackson-core'
+        all*.exclude module: 'jackson-annotations'
+        all*.exclude module: 'jackson-databind'
+        all*.exclude module: 'jackson-datatype-jsr310'
     }
 
     dependencies {
@@ -114,7 +120,7 @@ subprojects {
         implementation 'org.springframework.boot:spring-boot-starter-web'
         implementation 'org.springframework.boot:spring-boot-starter-aop'
         implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        //implementation 'org.springframework.boot:spring-boot-starter-actuator'
         implementation 'org.springframework.boot:spring-boot-starter-undertow'
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
         implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -140,7 +146,7 @@ subprojects {
         implementation 'org.hashids:hashids:1.0.3'
         implementation 'org.noear:snack3:3.2.75'
         implementation 'redis.clients:jedis'
-        compileOnly 'io.github.linpeilie:mapstruct-plus-spring-boot-starter:1.3.5'
+        implementation 'io.github.linpeilie:mapstruct-plus-spring-boot-starter:1.3.5'
         compileOnly 'org.projectlombok:lombok:1.18.28'
         runtimeOnly 'com.mysql:mysql-connector-j'
         annotationProcessor 'org.projectlombok:lombok:1.18.28'

@@ -11,6 +11,9 @@ import ${importDao}.${className}Dao;
 import ${importDO}.${className}PageBO;
 
 import lombok.RequiredArgsConstructor;
+<%if(importBigInteger==true){%>
+import java.math.BigInteger;
+<%}%>
 
 /**
  *
@@ -52,7 +55,7 @@ public class ${className}QrySvc {
      * @return
      */
     public ${className}ViewVO view(${cm.javaType} ${cm.colName}) {
-        return dao.single(${cm.colName}, ${className}ViewVO.class);
+        return dao.view(${cm.colName});
     }
     <%break;%>
     <%}%>

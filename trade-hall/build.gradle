@@ -1,15 +1,16 @@
 dependencies {
     implementation project(':common')
 }
+buildDir = 'target'
 
-    // jar {
-    //     manifest{
-    //         attributes 'Main-Class': 'com.sdnc.trade.TradeHallApplication'
-    //     }
-    // }
-    // application {
-    //     mainClassName='com.sdnc.trade.TradeHallApplication'
-    // }
+//jar {
+//    manifest{
+//        attributes 'Main-Class': 'com.sdnc.trade.TradeHallApplication'
+//    }
+//}
+//application {
+//    mainClassName='com.sdnc.trade.TradeHallApplication'
+//}
 
     // bootJar {
     //     enabled = false

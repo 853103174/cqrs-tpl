@@ -88,43 +88,33 @@ public class BeetlSqlConfigurer {
 			// bigIntTypeHandler);
 
 			// 自动生成自增主键,微服务可以使用github上滴滴开源的Tinyid方案
-			manager.addIdAutoGen("autoId", new IDAutoGen<Long>() {
-
-				@Override
-				public Long nextID(String params) {
-					String sql = "select nextval('all_id_seq')";
-					return primarySQLManager.executeQueryOne(new SQLReady(sql), Long.class);
-				}
-
+			manager.addIdAutoGen("autoId", (IDAutoGen<Long>) params -> {
+				String sql = "select nextval(all_id_seq)";
+				return primarySQLManager.executeQueryOne(new SQLReady(sql), Long.class);
 			});
 			// 订单号
-			manager.addIdAutoGen("orderId", new IDAutoGen<Long>() {
-
-				@Override
-				public Long nextID(String params) {
-					Date now = new Date();
-					String date = String.format("order-%tF", now);
-					if (!cache.hasKey(date)) {
-						cache.expire(date, 1, TimeUnit.DAYS);
-					}
-					Long count = cache.increment(date);
-					if (count < 100) {
-						Long remainderUserId = AccessContext.getAccessUser().getId() % 100;
-						String orderId = String.format("%1$ty%1$tm%1$td%2$02d%3$03d", now, remainderUserId, count);
-
-						return Long.valueOf(orderId);
-					} else if (count >= 100 && count < 10000) {
-						Long remainderUserId = AccessContext.getAccessUser().getId() % 10;
-						String orderId = String.format("%1$ty%1$tm%1$td%2$d%3$04d", now, remainderUserId, count);
-
-						return Long.valueOf(orderId);
-					} else {
-						String orderId = String.format("%1$ty%1$tm%1$td%2$d", now, count);
-
-						return Long.valueOf(orderId);
-					}
+			manager.addIdAutoGen("orderId", (IDAutoGen<Long>) params -> {
+				Date now = new Date();
+				String date = String.format("order-%tF", now);
+				if (!cache.hasKey(date)) {
+					cache.expire(date, 1, TimeUnit.DAYS);
 				}
+				Long count = cache.increment(date);
+				if (count < 100) {
+					Long remainderUserId = AccessContext.getAccessUser().getId() % 100;
+					String orderId = String.format("%1$ty%1$tm%1$td%2$02d%3$03d", now, remainderUserId, count);
 
+					return Long.valueOf(orderId);
+				} else if (count >= 100 && count < 10000) {
+					Long remainderUserId = AccessContext.getAccessUser().getId() % 10;
+					String orderId = String.format("%1$ty%1$tm%1$td%2$d%3$04d", now, remainderUserId, count);
+
+					return Long.valueOf(orderId);
+				} else {
+					String orderId = String.format("%1$ty%1$tm%1$td%2$d", now, count);
+
+					return Long.valueOf(orderId);
+				}
 			});
 		};
 	}

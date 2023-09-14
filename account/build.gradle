@@ -1,15 +1,21 @@
 dependencies {
     implementation project(':common')
 }
+buildDir = 'target'
 
-    // application {
-    //     mainClassName='com.sdnc.trade.TradeHallApplication'
-    // }
+//jar {
+//    manifest{
+//        mainClassName='com.sdnc.account.AccountApplication'
+//    }
+//}
+//application {
+//    mainClassName='com.sdnc.account.AccountApplication'
+//}
 
 
-    // bootJar {
-    //     enabled = false
-    // }
+//     bootJar {
+//         enabled = false
+//     }
 // bootRun {
 //     mainClass "com.sdnc.trade.TradeHallApplication"
 //     //jvmArgs "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"

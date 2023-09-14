@@ -1,10 +1,5 @@
 package com.sdnc.account.application.service.passport;
 
-import java.util.concurrent.TimeUnit;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.sdnc.account.domain.businessobject.passport.LoginBO;
 import com.sdnc.account.domain.businessobject.passport.RegisterBO;
 import com.sdnc.common.constant.TokenConstants;
@@ -13,8 +8,11 @@ import com.sdnc.common.exception.TokenException;
 import com.sdnc.common.kits.KV;
 import com.sdnc.common.kits.ULIDKit;
 import com.sdnc.common.redis.RedisCache;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -70,7 +68,7 @@ public class PassportCmdSvc {
         } else {
             throw new SystemException("不支持当前登录方式");
         }
-        Long userId = 0L;
+        Long userId = 1L;
         KV kv = KV.by("accessToken", createAccessToken(userId))
                 .set("refreshToken", createRefreshToken(userId));
 
@@ -105,7 +103,7 @@ public class PassportCmdSvc {
     private String createAccessToken(Long userId) {
         String ulid = ULIDKit.createToken(userId);
         String userKey = String.format(TokenConstants.APP_ACCESS_TOKEN, ulid);
-        cache.putValue(userKey, userId, 30, TimeUnit.MINUTES);
+        cache.putValue(userKey, userId.toString(), 30, TimeUnit.MINUTES);
 
         return ulid;
     }
@@ -119,7 +117,7 @@ public class PassportCmdSvc {
     private String createRefreshToken(Long userId) {
         String ulid = ULIDKit.createToken(userId);
         String userKey = String.format(TokenConstants.APP_REFRESH_TOKEN, ulid);
-        cache.putValue(userKey, userId, 3, TimeUnit.DAYS);
+        cache.putValue(userKey, userId.toString(), 3, TimeUnit.DAYS);
 
         return ulid;
     }

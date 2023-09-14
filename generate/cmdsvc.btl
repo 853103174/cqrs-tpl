@@ -1,11 +1,8 @@
 package ${packageName};
 
-import java.time.LocalDateTime;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sdnc.common.auth.AccessContext;
 import ${importPO}.${className}PO;
 import ${importDao}.${className}Dao;
 import ${importDO}.${className}CreateBO;
@@ -34,14 +31,13 @@ public class ${className}CmdSvc {
      * @param bo
      */
     public void create(${className}CreateBO bo) {
-        //LocalDateTime now = LocalDateTime.now();
-        //Long userId = AccessContext.getAccessUser().getId();
         ${className}PO po = converter.convert(bo, ${className}PO.class);
-        //po.setCreateBy(userId);
-        //po.setCreateAt(now);
-        //po.setUpdateBy(userId);
-        //po.setUpdateAt(now);
-        //po.setDel(0);
+<%for(cm in columns){%>
+    <%if(cm.colName=="del"){%>
+        po.setDel(0);
+    <%break;%>
+    <%}%>
+<%}%>
         dao.insertTemplate(po);
     }
 
@@ -51,11 +47,7 @@ public class ${className}CmdSvc {
      * @param bo
      */
     public void modify(${className}ModifyBO bo) {
-        //LocalDateTime now = LocalDateTime.now();
-        //Long userId = AccessContext.getAccessUser().getId();
         ${className}PO po = converter.convert(bo, ${className}PO.class);
-        //po.setUpdateBy(userId);
-        //po.setUpdateAt(now);
         dao.updateTemplateById(po);
     }
 

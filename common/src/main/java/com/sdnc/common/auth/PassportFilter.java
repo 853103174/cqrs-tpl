@@ -46,7 +46,7 @@ public final class PassportFilter implements Filter {
 			chain.doFilter(request, response);
 		} else {
 			final AccessUser accessUser = tokenContext.getAccessUser(accessToken);
-			if (Objects.isNull(accessUser.getId())) {
+			if (Objects.isNull(accessUser)) {
 				HttpStatus status = HttpStatus.NETWORK_AUTHENTICATION_REQUIRED;
 				HttpWriterKit.text(response, "请重新登录", status);
 				return;

@@ -32,8 +32,6 @@ import java.util.Properties;
  * 1 bean属性按原始数据库字段经过去掉下划线,并大写处理首字母.
  * 2 生成的bean带了数据库的字段说明.
  */
-// @SpringBootConfiguration
-// @SpringBootTest
 public class GenerateJavaFileUtils {
 	private static Map<String, String> map = new HashMap<>();
 	/***** 包名开始 *****/
@@ -51,7 +49,7 @@ public class GenerateJavaFileUtils {
 	private static String tableremarks = ""; // 表备注
 	private static String pk = ""; // 主键
 	private static String baseTemplatePath; // 模板引擎文件夹路径
-	private static List<KV> columns = new ArrayList<>(); // 列名集合
+	private static KV globalObject = new KV(); // 全局参数
 
 	public static void main(String[] args) {
 		tablename = "area";
@@ -67,12 +65,11 @@ public class GenerateJavaFileUtils {
 	/**
 	 * 创建包名
 	 *
-	 * @param packages
-	 *                 包名
+	 * @param packages 包名
 	 */
 	private static void createPackage(String packages) {
 		String basePath = System.getProperty("java.class.path");
-		String basepackagename = basePath.substring(0, basePath.indexOf("bin")) + "src/main/java/com/sdnc/trade";
+		String basepackagename = basePath.substring(0, basePath.indexOf("target")) + "src/main/java/com/sdnc/trade";
 		String command_assembler = basepackagename + "/application/assembler/";
 		command_assembler_name = String.format(command_assembler, packages);
 		File dir = new File(command_assembler_name);
@@ -142,15 +139,13 @@ public class GenerateJavaFileUtils {
 		try {
 			conn = getConnection();
 			dbmd = conn.getMetaData();
-			ResultSet resultSet = dbmd.getTables(conn.getCatalog(), getSchema(conn), tablename,
-					new String[] { "TABLE", "REMARKS" });
+			ResultSet resultSet = dbmd.getTables(conn.getCatalog(), getSchema(conn), tablename, new String[]{"TABLE", "REMARKS"});
 			while (resultSet.next()) {
 				tableremarks = resultSet.getString("REMARKS");
 				DatabaseMetaData dmd = conn.getMetaData();
 				ResultSet rs = dmd.getColumns(conn.getCatalog(), getSchema(conn), tablename, "%");
 				while (rs.next()) {
-					map.put(processColnames(rs.getString("COLUMN_NAME")),
-							rs.getString("REMARKS").replaceAll("\n", " "));
+					map.put(processColnames(rs.getString("COLUMN_NAME")), rs.getString("REMARKS").replaceAll("\n", " "));
 				}
 
 				rs = dmd.getPrimaryKeys(conn.getCatalog(), getSchema(conn), tablename);
@@ -195,7 +190,6 @@ public class GenerateJavaFileUtils {
 		for (int i = str.indexOf("_") + 2, size = ch.length; i < size; ++i) {
 			if (ch[i] == '_') {
 				index = i;
-				continue;
 			} else if (i == index + 1) {
 				sb.append((char) (ch[i] - 32));
 			} else {
@@ -277,8 +271,8 @@ public class GenerateJavaFileUtils {
 		Connection localConnection = null;
 		try {
 			String basePath = System.getProperty("java.class.path");
-			String confs = basePath.substring(0, basePath.indexOf("bin")) + "src/main/resources/dev/application.yml";
-			Map<String, String> conf = new Yaml().load(new FileInputStream(new File(confs)));
+			String confs = basePath.substring(0, basePath.indexOf("target")) + "src/main/resources/dev/application.yml";
+			Map<String, String> conf = new Yaml().load(new FileInputStream(confs));
 			ONode node = ONode.load(conf).select("$.spring.datasource");
 			String jdbcUrl = node.get("jdbcUrl").getString();
 			String username = node.get("username").getString();
@@ -324,14 +318,14 @@ public class GenerateJavaFileUtils {
 			String colType = null;
 			String javaType = null;
 			String className = hump(tablename);
-			String poPackage = command_po_name.substring(command_po_name.indexOf("com/"), command_po_name.length() - 1)
-					.replaceAll("/", ".");
+			String poPackage = command_po_name.substring(command_po_name.indexOf("com/"), command_po_name.length() - 1).replaceAll("/", ".");
 			PreparedStatement pstmt = conn.prepareStatement(strsql);
 			pstmt.executeQuery();
 			ResultSetMetaData rsmd = pstmt.getMetaData();
-			KV paras = KV.by("packageName", poPackage).set("tableRemark", tableremarks).set("tableName", tablename)
-					.set("className", className).set("importBigInteger", false).set("importDate", false)
-					.set("importDateAt", false).set("importTime", false).set("importTimeAt", false);
+			KV paras = KV.by("packageName", poPackage).set("tableRemark", tableremarks).set("tableName", tablename).set("className", className).set("importBigInteger", false).set("importDate", false).set("importDateAt", false)
+					.set("importTime", false).set("importTimeAt", false).set("importUpdateTime", false).set("importUpdateUser", false);
+			globalObject.set("importPO", poPackage).set("importBigInteger", false).set("importDate", false).set("importDateAt", false).set("importTime", false).set("importTimeAt", false);
+			List<KV> columns = new ArrayList<>();
 			for (int i = 0; i < rsmd.getColumnCount(); i++) {
 				KV column = new KV();
 				colName = processColnames(rsmd.getColumnName(i + 1));
@@ -342,20 +336,31 @@ public class GenerateJavaFileUtils {
 				}
 				if (javaType.equals("BigInteger")) {
 					paras.set("importBigInteger", true);
+					globalObject.set("importBigInteger", true);
 				}
 				if (javaType.equals("LocalDate")) {
 					paras.set("importDate", true);
+					globalObject.set("importDate", true);
 
 					if (!"createAt".equals(colName) && !"updateAt".equals(colName)) {
 						paras.set("importDateAt", true);
+						globalObject.set("importDateAt", true);
 					}
 				}
 				if (javaType.equals("LocalDateTime")) {
 					paras.set("importTime", true);
+					globalObject.set("importTime", true);
 
 					if (!"createAt".equals(colName) && !"updateAt".equals(colName)) {
 						paras.set("importTimeAt", true);
+						globalObject.set("importTimeAt", true);
 					}
+				}
+				if ("createAt".equals(colName) || "updateAt".equals(colName)) {
+					paras.set("importUpdateTime", true);
+				}
+				if ("createBy".equals(colName) || "updateBy".equals(colName)) {
+					paras.set("importUpdateUser", true);
 				}
 				column.set("colName", colName);
 				column.set("maxSize", rsmd.getColumnDisplaySize(i + 1));
@@ -365,8 +370,9 @@ public class GenerateJavaFileUtils {
 				columns.add(column);
 			}
 			paras.set("columns", columns);
+			globalObject.set("columns", columns);
 			// PO
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			sb.append(command_po_name);
 			sb.append(className).append("PO.java");
 			FileResourceLoader resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
@@ -374,12 +380,11 @@ public class GenerateJavaFileUtils {
 			GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 			Template tpl = gt.getTemplate("/po.btl");
 			tpl.binding(paras);
-			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
+			tpl.renderTo(new FileOutputStream(sb.toString()));
 			// PageVO
-			String boPackage = command_vo_name.substring(command_vo_name.indexOf("com/"), command_vo_name.length() - 1)
-					.replaceAll("/", ".");
+			String boPackage = command_vo_name.substring(command_vo_name.indexOf("com/"), command_vo_name.length() - 1).replaceAll("/", ".");
 			paras.set("packageName", boPackage).set("importPO", poPackage);
-			sb = new StringBuffer();
+			sb = new StringBuilder();
 			sb.append(command_vo_name);
 			sb.append(className).append("PageVO.java");
 			resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
@@ -387,9 +392,9 @@ public class GenerateJavaFileUtils {
 			gt = new GroupTemplate(resourceLoader, cfg);
 			tpl = gt.getTemplate("/pagevo.btl");
 			tpl.binding(paras);
-			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
+			tpl.renderTo(new FileOutputStream(sb.toString()));
 			// ViewVO
-			sb = new StringBuffer();
+			sb = new StringBuilder();
 			sb.append(command_vo_name);
 			sb.append(className).append("ViewVO.java");
 			resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
@@ -397,13 +402,11 @@ public class GenerateJavaFileUtils {
 			gt = new GroupTemplate(resourceLoader, cfg);
 			tpl = gt.getTemplate("/viewvo.btl");
 			tpl.binding(paras);
-			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
+			tpl.renderTo(new FileOutputStream(sb.toString()));
 			// PageBO
-			String doPackage = command_businessobject_name
-					.substring(command_businessobject_name.indexOf("com/"), command_businessobject_name.length() - 1)
-					.replaceAll("/", ".");
+			String doPackage = command_businessobject_name.substring(command_businessobject_name.indexOf("com/"), command_businessobject_name.length() - 1).replaceAll("/", ".");
 			paras.set("packageName", doPackage);
-			sb = new StringBuffer();
+			sb = new StringBuilder();
 			sb.append(command_businessobject_name);
 			sb.append(className).append("PageBO.java");
 			resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
@@ -411,9 +414,9 @@ public class GenerateJavaFileUtils {
 			gt = new GroupTemplate(resourceLoader, cfg);
 			tpl = gt.getTemplate("/pagebo.btl");
 			tpl.binding(paras);
-			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
+			tpl.renderTo(new FileOutputStream(sb.toString()));
 			// CreateBO
-			sb = new StringBuffer();
+			sb = new StringBuilder();
 			sb.append(command_businessobject_name);
 			sb.append(className).append("CreateBO.java");
 			resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
@@ -421,9 +424,9 @@ public class GenerateJavaFileUtils {
 			gt = new GroupTemplate(resourceLoader, cfg);
 			tpl = gt.getTemplate("/createbo.btl");
 			tpl.binding(paras);
-			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
+			tpl.renderTo(new FileOutputStream(sb.toString()));
 			// ModifyBO
-			sb = new StringBuffer();
+			sb = new StringBuilder();
 			sb.append(command_businessobject_name);
 			sb.append(className).append("ModifyBO.java");
 			resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
@@ -431,7 +434,7 @@ public class GenerateJavaFileUtils {
 			gt = new GroupTemplate(resourceLoader, cfg);
 			tpl = gt.getTemplate("/modifybo.btl");
 			tpl.binding(paras);
-			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
+			tpl.renderTo(new FileOutputStream(sb.toString()));
 
 			System.out.println("Entity生成成功***********");
 		} catch (SQLException | IOException e) {
@@ -447,22 +450,19 @@ public class GenerateJavaFileUtils {
 	public static void table2dao() {
 		try {
 			String className = hump(tablename);
-			String packageName = command_dao_name
-					.substring(command_dao_name.indexOf("com/"), command_dao_name.length() - 1)
-					.replaceAll("/", ".");
-			StringBuffer sb = new StringBuffer();
+			String packageName = command_dao_name.substring(command_dao_name.indexOf("com/"), command_dao_name.length() - 1).replaceAll("/", ".");
+			StringBuilder sb = new StringBuilder();
 			sb.append(command_dao_name);
 			sb.append(className).append("Dao.java");
-			String poPackage = command_po_name.substring(command_po_name.indexOf("com/"), command_po_name.length() - 1)
-					.replaceAll("/", ".");
-			KV paras = KV.by("packageName", packageName).set("tableRemark", tableremarks).set("className", className)
-					.set("importPO", poPackage).set("columns", columns);
+			String boPackage = command_vo_name.substring(command_vo_name.indexOf("com/"), command_vo_name.length() - 1).replaceAll("/", ".");
+			KV paras = KV.by("packageName", packageName).set("tableRemark", tableremarks).set("className", className).set("importBO", boPackage);
+			paras.putAll(globalObject.toMap());
 			FileResourceLoader resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
 			Configuration cfg = Configuration.defaultConfiguration();
 			GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 			Template tpl = gt.getTemplate("/dao.btl");
 			tpl.binding(paras);
-			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
+			tpl.renderTo(new FileOutputStream(sb.toString()));
 			System.out.println("Dao生成成功***********");
 		} catch (BeetlException | IOException e) {
 			e.printStackTrace();
@@ -475,34 +475,24 @@ public class GenerateJavaFileUtils {
 	public static void table2service() {
 		try {
 			String className = hump(tablename);
-			String packageName = command_service_name
-					.substring(command_service_name.indexOf("com/"), command_service_name.length() - 1)
-					.replaceAll("/", ".");
-			StringBuffer sb = new StringBuffer();
+			String packageName = command_service_name.substring(command_service_name.indexOf("com/"), command_service_name.length() - 1).replaceAll("/", ".");
+			StringBuilder sb = new StringBuilder();
 			sb.append(command_service_name);
 			sb.append(className).append("CmdSvc.java");
-			String poPackage = command_po_name.substring(command_po_name.indexOf("com/"), command_po_name.length() - 1)
-					.replaceAll("/", ".");
-			String daoPackage = command_dao_name
-					.substring(command_dao_name.indexOf("com/"), command_dao_name.length() - 1)
-					.replaceAll("/", ".");
-			String doPackage = command_businessobject_name
-					.substring(command_businessobject_name.indexOf("com/"), command_businessobject_name.length() - 1)
-					.replaceAll("/", ".");
-			String boPackage = command_vo_name.substring(command_vo_name.indexOf("com/"), command_vo_name.length() - 1)
-					.replaceAll("/", ".");
-			KV paras = KV.by("packageName", packageName).set("tableRemark", tableremarks).set("className", className)
-					.set("importPO", poPackage).set("importDao", daoPackage).set("importDO", doPackage)
-					.set("importBO", boPackage).set("columns", columns);
+			String daoPackage = command_dao_name.substring(command_dao_name.indexOf("com/"), command_dao_name.length() - 1).replaceAll("/", ".");
+			String doPackage = command_businessobject_name.substring(command_businessobject_name.indexOf("com/"), command_businessobject_name.length() - 1).replaceAll("/", ".");
+			String boPackage = command_vo_name.substring(command_vo_name.indexOf("com/"), command_vo_name.length() - 1).replaceAll("/", ".");
+			KV paras = KV.by("packageName", packageName).set("tableRemark", tableremarks).set("className", className).set("importDao", daoPackage).set("importDO", doPackage).set("importBO", boPackage);
+			paras.putAll(globalObject.toMap());
 			// CmdSvc
 			FileResourceLoader resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
 			Configuration cfg = Configuration.defaultConfiguration();
 			GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 			Template tpl = gt.getTemplate("/cmdsvc.btl");
 			tpl.binding(paras);
-			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
+			tpl.renderTo(new FileOutputStream(sb.toString()));
 			// QrySvc
-			sb = new StringBuffer();
+			sb = new StringBuilder();
 			sb.append(command_service_name);
 			sb.append(className).append("QrySvc.java");
 			resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
@@ -510,7 +500,7 @@ public class GenerateJavaFileUtils {
 			gt = new GroupTemplate(resourceLoader, cfg);
 			tpl = gt.getTemplate("/qrysvc.btl");
 			tpl.binding(paras);
-			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
+			tpl.renderTo(new FileOutputStream(sb.toString()));
 
 			System.out.println("Service生成成功***********");
 		} catch (BeetlException | IOException e) {
@@ -524,23 +514,15 @@ public class GenerateJavaFileUtils {
 	public static void table2controller() {
 		try {
 			String className = hump(tablename);
-			String packageName = command_controller_name
-					.substring(command_controller_name.indexOf("com/"), command_controller_name.length() - 1)
-					.replaceAll("/", ".");
-			String servicePackage = command_service_name
-					.substring(command_service_name.indexOf("com/"), command_service_name.length() - 1)
-					.replaceAll("/", ".");
-			String doPackage = command_businessobject_name
-					.substring(command_businessobject_name.indexOf("com/"), command_businessobject_name.length() - 1)
-					.replaceAll("/", ".");
-			String boPackage = command_vo_name.substring(command_vo_name.indexOf("com/"), command_vo_name.length() - 1)
-					.replaceAll("/", ".");
-			KV paras = KV.by("packageName", packageName).set("tableRemark", tableremarks)
-					.set("path", tablename.substring(tablename.indexOf("_") + 1).replaceAll("_", "-"))
-					.set("className", className).set("importSvc", servicePackage).set("importDO", doPackage)
-					.set("importBO", boPackage).set("columns", columns);
+			String packageName = command_controller_name.substring(command_controller_name.indexOf("com/"), command_controller_name.length() - 1).replaceAll("/", ".");
+			String servicePackage = command_service_name.substring(command_service_name.indexOf("com/"), command_service_name.length() - 1).replaceAll("/", ".");
+			String doPackage = command_businessobject_name.substring(command_businessobject_name.indexOf("com/"), command_businessobject_name.length() - 1).replaceAll("/", ".");
+			String boPackage = command_vo_name.substring(command_vo_name.indexOf("com/"), command_vo_name.length() - 1).replaceAll("/", ".");
+			KV paras = KV.by("packageName", packageName).set("tableRemark", tableremarks).set("path", tablename.substring(tablename.indexOf("_") + 1).replaceAll("_", "-")).set("className", className).set("importSvc", servicePackage)
+					.set("importDO", doPackage).set("importBO", boPackage);
+			paras.putAll(globalObject.toMap());
 			// CmdExe
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			sb.append(command_controller_name);
 			sb.append(className).append("CmdExe.java");
 			FileResourceLoader resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
@@ -548,9 +530,9 @@ public class GenerateJavaFileUtils {
 			GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 			Template tpl = gt.getTemplate("/cmdexe.btl");
 			tpl.binding(paras);
-			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
+			tpl.renderTo(new FileOutputStream(sb.toString()));
 			// QryExe
-			sb = new StringBuffer();
+			sb = new StringBuilder();
 			sb.append(command_controller_name);
 			sb.append(className).append("QryExe.java");
 			resourceLoader = new FileResourceLoader(baseTemplatePath, "UTF-8");
@@ -558,7 +540,7 @@ public class GenerateJavaFileUtils {
 			gt = new GroupTemplate(resourceLoader, cfg);
 			tpl = gt.getTemplate("/qryexe.btl");
 			tpl.binding(paras);
-			tpl.renderTo(new FileOutputStream(new File(sb.toString())));
+			tpl.renderTo(new FileOutputStream(sb.toString()));
 
 			System.out.println("Controller生成成功***********");
 		} catch (BeetlException | IOException e) {

@@ -1,8 +1,9 @@
-.gradle/
 out/
 bin/
 build/
 gradle/
+target/
+generated/
 
 # Compiled class file
 *.class
@@ -27,7 +28,8 @@ gradle/
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
- .idea/
+.gradle/
+.idea/
 .settings
 .classpath
 .project
