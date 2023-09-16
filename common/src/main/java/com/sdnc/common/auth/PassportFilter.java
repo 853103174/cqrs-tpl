@@ -13,15 +13,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
 import java.util.Objects;
 
 /**
- *
  * 校验用户是否登录过滤器
- *
  */
 @Component
 @Order(100)
@@ -33,15 +30,14 @@ public final class PassportFilter implements Filter {
 	private final PassportUrlProperties urlProperties;
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
 		final String accessToken = req.getHeader(HeaderConstant.ACCESS_TOKEN);
-		if (ObjectUtils.isEmpty(accessToken)) {
-			HttpStatus status = HttpStatus.PRECONDITION_FAILED;
-			HttpWriterKit.text(response, "登录信息获取失败", status);
-			return;
-		}
+		//if (ObjectUtils.isEmpty(accessToken)) {
+		//	HttpStatus status = HttpStatus.PRECONDITION_FAILED;
+		//	HttpWriterKit.text(response, "登录信息获取失败", status);
+		//	return;
+		//}
 		if (urlProperties.contains(req.getRequestURI())) {
 			chain.doFilter(request, response);
 		} else {

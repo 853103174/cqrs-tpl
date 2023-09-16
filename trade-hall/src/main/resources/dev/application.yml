@@ -60,7 +60,7 @@ passport:
     url:
         ignore:
             - /qry/area/page
-            - /qry/area/allList
+            - /qry/area/list
             - /qry/area/view/{code}
 
 management:
